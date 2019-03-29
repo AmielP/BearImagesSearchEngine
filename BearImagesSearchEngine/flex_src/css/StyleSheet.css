@@ -1,0 +1,13 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|BorderContainer
+{
+	background-color:#f0ebdb;
+}
+
+.blueBackgroundColor
+{
+	background-color:#0A306A;
+}

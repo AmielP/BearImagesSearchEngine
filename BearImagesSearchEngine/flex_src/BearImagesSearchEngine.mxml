@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx">
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   minHeight="300" minWidth="820" height="720" width="1280"
+					   styleName="blueBackgroundColor">
+	
+	<fx:Style source="/css/StyleSheet.css"/>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<s:BorderContainer left="57" right="57" top="10" bottom="10">
+	</s:BorderContainer>
 </s:WindowedApplication>
