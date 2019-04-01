@@ -4,11 +4,11 @@
 
 s|BorderContainer
 {
-	backgroundImage:Embed(source="/assets/Transparent-Background-of-Alaskan-Mountains-(Cropped).jpg");
+	backgroundImage:Embed(source="/assets/Transparent2-Background-of-Alaskan-Mountains-(Cropped).jpg");
 	opacity:0.5;
 }
 
 .blueBackgroundColor
 {
-	background-color:#0A306B;
+	background-color:#26619c;
 }
