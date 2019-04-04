@@ -7,9 +7,41 @@
 	
 	<fx:Style source="/css/StyleSheet.css"/>
 	
+	<!--<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			protected function bSearch_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Button Click", "Test", 4, this);
+			}
+		]]>
+	</fx:Script>-->
+	
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
+		<s:VGroup x="518" y="275">
+			<s:Label text="BISE"/>
+			<s:TextInput id="tiSearch" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"
+						 fontSize="18" text=""/>
+		</s:VGroup>
+		<s:Button id="bSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26"/>
+		<!--<mx:AdvancedDataGrid id="adgWebSearch" x="149" y="370" designViewDataType="flat">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
+				<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
+				<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+		<mx:AdvancedDataGrid id="adgLocalSearch" x="810" y="370" designViewDataType="flat">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
+				<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
+				<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
+			</mx:columns>
+		</mx:AdvancedDataGrid>-->
 	</s:BorderContainer>
 </s:WindowedApplication>

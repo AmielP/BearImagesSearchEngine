@@ -11,3 +11,20 @@ s|BorderContainer
 {
 	background-color:#26619c;
 }
+
+#tiSearch
+{
+	borderColor:#E3E3E3;
+}
+
+.bSearchStyle
+{
+	icon:Embed(source="/assets/magnifier-tool.png");
+	chromeColor:#FFFFFF; 
+	focusColor:#BDBDBD;
+	fontSize:16;
+	cornerRadius:0;
+	fontFamily:Verdana;
+	font-weight: bold;
+/*	background:#FFFFFF;*/
+}
