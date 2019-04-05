@@ -7,6 +7,17 @@
 	
 	<fx:Style source="/css/StyleSheet.css"/>
 	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			protected function bSearch_clickHandler(event:MouseEvent):void
+			{
+				Alert.show("Button Click", "Test", 4, this);
+			}
+		]]>
+	</fx:Script>
+	
+	
 	<!--<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
@@ -23,25 +34,35 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
-		<s:VGroup x="518" y="275">
-			<s:Label text="BISE"/>
-			<s:TextInput id="tiSearch" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"
-						 fontSize="18" text=""/>
-		</s:VGroup>
-		<s:Button id="bSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26"/>
-		<!--<mx:AdvancedDataGrid id="adgWebSearch" x="149" y="370" designViewDataType="flat">
-			<mx:columns>
-				<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
-				<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
-				<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
-			</mx:columns>
-		</mx:AdvancedDataGrid>
-		<mx:AdvancedDataGrid id="adgLocalSearch" x="810" y="370" designViewDataType="flat">
-			<mx:columns>
-				<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
-				<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
-				<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
-			</mx:columns>
-		</mx:AdvancedDataGrid>-->
+		<s:Button id="bSearch" x="152" y="69" label="Search" styleName="bSearchStyle" height="26" click="bSearch_clickHandler(event)"/>
+		<s:Label x="5" y="10" text="BISE"/>
+		<s:TextInput id="tiSearch" x="5" y="28" width="250" height="33" chromeColor="#FFFFFF"
+					 focusColor="#ECECEC" fontSize="18" text=""/>
+		<s:Panel title="Web Search Results" x="49" y="103" width="508" height="502">
+			<!--<s:controlBarContent>
+				<s:Label text="Bears from the the world wide web"/>
+			</s:controlBarContent>-->
+			<mx:AdvancedDataGrid id="adgWebSearch" 
+								 designViewDataType="flat" height="100%" width="100%">
+				<mx:columns>
+					<mx:AdvancedDataGridColumn dataField="col1" headerText="Bear Picture"/>
+					<mx:AdvancedDataGridColumn dataField="col2" headerText="Name"/>
+				</mx:columns>
+			</mx:AdvancedDataGrid>
+		</s:Panel>
+		
+		<s:Panel title="Local Search Results" x="604" y="103" width="487" height="502">
+			<!--<s:controlBarContent>
+				<s:Label text="Bears from the local database"/>
+			</s:controlBarContent>-->
+			<mx:AdvancedDataGrid id="adgLocalSearch" 
+								 designViewDataType="flat" height="100%" width="100%">
+				<mx:columns>
+					<mx:AdvancedDataGridColumn dataField="col1" headerText="Bear Picture"/>
+					<mx:AdvancedDataGridColumn dataField="col2" headerText="Name"/>
+				</mx:columns>
+			</mx:AdvancedDataGrid>
+		</s:Panel>
+		
 	</s:BorderContainer>
 </s:WindowedApplication>
