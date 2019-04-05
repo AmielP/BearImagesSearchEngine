@@ -5,10 +5,12 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<mx:AdvancedDataGrid id="adgLocalSearch" x="810" y="370" designViewDataType="flat">
-		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="col1" headerText="Bear Image"/>
-			<mx:AdvancedDataGridColumn dataField="col2" headerText="Name"/>
-		</mx:columns>
-	</mx:AdvancedDataGrid>
+	<s:Panel title="Local Search Results">
+		<mx:AdvancedDataGrid id="adgLocalSearch" x="810" y="370" designViewDataType="flat">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn dataField="col1" headerText="Bear Image"/>
+				<mx:AdvancedDataGridColumn dataField="col2" headerText="Name"/>
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+	</s:Panel>
 </s:Group>
