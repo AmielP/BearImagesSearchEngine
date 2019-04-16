@@ -6,8 +6,12 @@
 					   styleName="blueBackgroundColor">
 	
 	<fx:Style source="/css/StyleSheet.css"/>
+	<fx:Script source="/AMFClass.as"/>
+	<!--<fx:Script source="/java_src/webSearch/BingWebSearch.java"/>-->
+	<!--<s:RemoteObject id="testObj" destination="InitiateBingWebSearch.java"/>-->
+	<!--<fx:Script source="/js/script.js"/>-->
 	
-	<fx:Script>
+	<!--<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
 			protected function bSearch_clickHandler(event:MouseEvent):void
@@ -15,7 +19,7 @@
 				Alert.show("Button Click", "Test", 4, this);
 			}
 		]]>
-	</fx:Script>
+	</fx:Script>-->
 	
 	
 	<!--<fx:Script>
@@ -29,9 +33,40 @@
 		]]>
 	</fx:Script>-->
 	
+	<fx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import mx.controls.Alert;
+			import mx.rpc.events.ResultEvent;
+			private function testSearchResultHandler(event:ResultEvent):void
+			{
+				Alert.show("SUCCESS: Button Clicked", "testSearchResultHandler", 4, this);
+			}
+			private function testSearchFaultHandler(event:FaultEvent):void
+			{
+				Alert.show("FAIL", "testSearchFaultHandler", 4, this);
+			}
+			
+			protected function bSearch_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				roInitiateWebSearch.initiateSearchWeb();
+			}
+			
+		]]>
+	</fx:Script>
+	
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RemoteObject id="roInitiateWebSearch"
+						channelSet="{amfClassChannelSet}"
+						destination="webSearchServices"
+						showBusyCursor="false">
+			<s:method name="testSearch"
+					  result="testSearchResultHandler(event)"
+					  fault="testSearchFaultHandler(event)"/>
+		</s:RemoteObject>
 	</fx:Declarations>
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
 		<s:Button id="bSearch" x="152" y="69" label="Search" styleName="bSearchStyle" height="26" click="bSearch_clickHandler(event)"/>
