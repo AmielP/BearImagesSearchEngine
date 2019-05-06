@@ -1,4 +1,4 @@
-package java_src.searchResults;
+package searchResults;
 
 import java.util.HashMap;
 

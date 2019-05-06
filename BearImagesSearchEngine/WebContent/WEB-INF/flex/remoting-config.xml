@@ -13,9 +13,15 @@
 		<channel ref="my-amf" />
 	</default-channels>
 
-	<destination id="webSearchServices">
+	<destination id="gateway-webSearchServices">
 		<properties>
 			<source>webSearch.BingWebSearch</source>
+		</properties>
+	</destination>
+	
+	<destination id="gateway-localSearchServices">
+		<properties>
+			<source>localSearch.LocalSearchDAO</source>
 		</properties>
 	</destination>
 

@@ -1,9 +1,10 @@
+package webSearch;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java_src.searchResults.SearchResults;
+import searchResults.SearchResults;
 
 public class InitiateBingWebSearch 
 {
@@ -28,8 +29,8 @@ public class InitiateBingWebSearch
 		
 		try
 		{
-			System.out.println("Searching the Web for: " + bwsObj.getSearchTerm());
-			SearchResults result = bwsObj.searchWeb(bwsObj.getSearchTerm());
+			System.out.println("Searching the Web for: " + bwsObj.getDefaultSearchTerm());
+			SearchResults result = bwsObj.searchWeb(bwsObj.getDefaultSearchTerm());
 			System.out.println("\nRelevant HTTP Headers:\n");
 			for(String header : result.getRelevantHeaders().keySet())
 			System.out.println(header + ": " + result.getRelevantHeaders().get(header));

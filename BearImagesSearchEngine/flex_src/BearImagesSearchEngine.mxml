@@ -3,10 +3,9 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   minHeight="300" minWidth="420" height="720" width="1280"
-					   styleName="blueBackgroundColor">
+					   styleName="blueBackgroundColor" creationComplete="windowedapplication1_initializeHandler(event)">
 	
 	<fx:Style source="/css/StyleSheet.css"/>
-	<fx:Script source="/AMFClass.as"/>
 	<!--<fx:Script source="/java_src/webSearch/BingWebSearch.java"/>-->
 	<!--<s:RemoteObject id="testObj" destination="InitiateBingWebSearch.java"/>-->
 	<!--<fx:Script source="/js/script.js"/>-->
@@ -35,22 +34,79 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import mx.rpc.events.FaultEvent;
+			import flash.net.dns.AAAARecord;
+			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.AsyncResponder;
+			import mx.rpc.AsyncToken;
+			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			private function testSearchResultHandler(event:ResultEvent):void
+			import mx.rpc.remoting.RemoteObject;
+			
+			private var amf:AMFClass;
+			private var roInitiateWebSearch:RemoteObject;
+//			private var roInitiateLocalSearch:RemoteObject;
+			
+			[Bindable]
+			private var dpBingWebSearch:ArrayCollection;
+//			private var dpLocalSearch:ArrayCollection;
+			
+			private function webSearchResultHandler(event:ResultEvent, token:Object):void
 			{
-				Alert.show("SUCCESS: Button Clicked", "testSearchResultHandler", 4, this);
+				dpBingWebSearch = new ArrayCollection();
+				dpBingWebSearch = event.result as ArrayCollection;
+//				Alert.show("SUCCESS: Button Clicked", "testSearchResultHandler", 4, this);
+//				trace("hello", 4, this);
+				trace("SUCCESS: Button Clicked");
 			}
-			private function testSearchFaultHandler(event:FaultEvent):void
+			private function webSearchFaultHandler(event:FaultEvent, token:Object):void
 			{
 				Alert.show("FAIL", "testSearchFaultHandler", 4, this);
+			}
+			
+			private function initRemoteObject():void
+			{
+				roInitiateWebSearch = new RemoteObject;
+//				roInitiateLocalSearch.channelSet = amf.amfClassChannelSet;
+				roInitiateWebSearch.channelSet = amf.amfClassChannelSet;
+				roInitiateWebSearch.destination = "gateway-webSearchServices";
+//				roInitiateLocalSearch.destination = "gateway-localSearchServices";
+			}
+			
+			protected function windowedapplication1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				amf = new AMFClass();
+				amf.initAMFClassChannel();
+				initRemoteObject();
+			}
+			
+//			private function localSearch():void
+//			{
+//				var token:AsyncToken; //initialize this to the method = roInitiateLocalSearch.searchAPI();
+//				var responder:AsyncResponder; //initializse this to a new AysncResponder object = new AsyncResponder(localSearchResultHandler, localSearchFaultHandler, token);
+//				token.addResponder(responder);
+//			}
+			
+			private function webSearch():void
+			{
+				var token:AsyncToken = roInitiateWebSearch.searchWebAPI(tiSearch.text);
+				var responder:AsyncResponder = new AsyncResponder(webSearchResultHandler, webSearchFaultHandler, token);
+				token.addResponder(responder);
 			}
 			
 			protected function bSearch_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				roInitiateWebSearch.initiateSearchWeb();
+				webSearch();
+			}
+			
+			protected function tiSearch_enterHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				webSearch();
 			}
 			
 		]]>
@@ -59,45 +115,55 @@
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:RemoteObject id="roInitiateWebSearch"
+		<!--<s:RemoteObject id="roInitiateWebSearch"
 						channelSet="{amfClassChannelSet}"
-						destination="webSearchServices"
-						showBusyCursor="false">
-			<s:method name="testSearch"
+						destination="gateway-webSearchServices">
+			<s:method name="initiateSearchWeb"
 					  result="testSearchResultHandler(event)"
 					  fault="testSearchFaultHandler(event)"/>
-		</s:RemoteObject>
+		</s:RemoteObject>-->
 	</fx:Declarations>
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
 		<s:Button id="bSearch" x="152" y="69" label="Search" styleName="bSearchStyle" height="26" click="bSearch_clickHandler(event)"/>
-		<s:Label x="5" y="10" text="BISE"/>
+		<s:Label x="5" y="10" text="Bear Images Search Engine"/>
 		<s:TextInput id="tiSearch" x="5" y="28" width="250" height="33" chromeColor="#FFFFFF"
-					 focusColor="#ECECEC" fontSize="18" text=""/>
-		<s:Panel title="Web Search Results" x="49" y="103" width="508" height="502">
+					 focusColor="#ECECEC" fontSize="18" text="" enter="tiSearch_enterHandler(event)"/>
+		<s:Panel left="10" right="10" top="103" bottom="93" title="Web Search Results">
 			<!--<s:controlBarContent>
 				<s:Label text="Bears from the the world wide web"/>
 			</s:controlBarContent>-->
-			<mx:AdvancedDataGrid id="adgWebSearch" 
-								 designViewDataType="flat" height="100%" width="100%">
+			<mx:AdvancedDataGrid rowHeight="200" id="adgWebSearch" 
+								 designViewDataType="flat" height="100%" width="100%" dataProvider="{dpBingWebSearch}">
 				<mx:columns>
-					<mx:AdvancedDataGridColumn dataField="col1" headerText="Bear Picture"/>
-					<mx:AdvancedDataGridColumn dataField="col2" headerText="Name"/>
+					<mx:AdvancedDataGridColumn width="50" dataField="bearImageID" headerText="ID"/>
+					<mx:AdvancedDataGridColumn width="900" dataField="contentURL" headerText="Bear Image"><!--300-->
+						<!-- modified code sourced from https://stackoverflow.com/questions/2922871/flex-3-adding-image-in-datagrid -->
+						<mx:itemRenderer>
+							<fx:Component>
+								<mx:HBox height="30" width="30" horizontalAlign="center">
+									<s:Image height="100%" width="100%" source="{data.contentURL}"/>
+								</mx:HBox> 
+							</fx:Component>
+						</mx:itemRenderer>
+					</mx:AdvancedDataGridColumn>
+					<mx:AdvancedDataGridColumn wordWrap="true" editable="true" dataField="name" headerText="Description"/>
 				</mx:columns>
 			</mx:AdvancedDataGrid>
 		</s:Panel>
 		
-		<s:Panel title="Local Search Results" x="604" y="103" width="487" height="502">
-			<!--<s:controlBarContent>
+		<!--<s:Panel left="604" right="10" top="103" bottom="93" title="Local Search Results">
+			<s:controlBarContent>
 				<s:Label text="Bears from the local database"/>
 			</s:controlBarContent>-->
-			<mx:AdvancedDataGrid id="adgLocalSearch" 
+			<!--<mx:AdvancedDataGrid rowHeight="200" id="adgLocalSearch" 
 								 designViewDataType="flat" height="100%" width="100%">
 				<mx:columns>
-					<mx:AdvancedDataGridColumn dataField="col1" headerText="Bear Picture"/>
-					<mx:AdvancedDataGridColumn dataField="col2" headerText="Name"/>
+					<mx:AdvancedDataGridColumn width="50" dataField="bearImageID" headerText="ID"/>
+					<mx:AdvancedDataGridColumn width="300" dataField="content" headerText="Bear Image"/>
+					<mx:AdvancedDataGridColumn dataField="col2" headerText="Description"/>
 				</mx:columns>
 			</mx:AdvancedDataGrid>
-		</s:Panel>
+		</s:Panel>-->
 		
 	</s:BorderContainer>
 </s:WindowedApplication>
