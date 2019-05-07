@@ -9,14 +9,14 @@
 	<fx:Style source="/css/StyleSheet.css"/>
 	
 	<!--<fx:Script>
-		<![CDATA[
-			import mx.controls.Alert;
-			protected function bSearch_clickHandler(event:MouseEvent):void
-			{
-				// TODO Auto-generated method stub
-				Alert.show("Button Click", "Test", 4, this);
-			}
-		]]>
+	<![CDATA[
+	import mx.controls.Alert;
+	protected function bSearch_clickHandler(event:MouseEvent):void
+	{
+	// TODO Auto-generated method stub
+	Alert.show("Button Click", "Test", 4, this);
+	}
+	]]>
 	</fx:Script>-->
 	
 	
@@ -24,6 +24,12 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
+		<s:Panel title="Web Search Results" left="10" right="10" top="103" bottom="93">
+			<s:controlBarContent>
+				<s:Label text="Bear images search results from the world wide web"/>
+			</s:controlBarContent>
+			<bearSearchAdvDataGrids:WebSearchAdvDataGrid/>
+		</s:Panel>
 		<s:VGroup x="518" y="275">
 			<s:Label text="BISE"/>
 			<s:TextInput id="tiSearch" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"

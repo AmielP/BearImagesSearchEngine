@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Panel title="Web Search Results" left="10" right="10" top="103" bottom="93">
-		<s:controlBarContent>
-			<s:Label text="Bear images search results from the world wide web"/>
-		</s:controlBarContent>
 		<mx:AdvancedDataGrid id="adgWebSearch" designViewDataType="flat" rowHeight="200" height="100%" width="100%">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn dataField="bearImageID" headerText="ID" width="50"/>
 				<mx:AdvancedDataGridColumn dataField="contentURL" headerText="Bear Image" width="900"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
-	</s:Panel>
 </s:Group>
