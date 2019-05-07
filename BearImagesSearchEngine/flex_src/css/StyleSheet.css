@@ -17,14 +17,18 @@ s|BorderContainer
 	borderColor:#E3E3E3;
 }
 
-.bSearchStyle
+.bBackStyle, .bSearchStyle
 {
-	icon:Embed(source="/assets/magnifier-tool.png");
 	chromeColor:#FFFFFF; 
 	focusColor:#BDBDBD;
 	fontSize:16;
 	cornerRadius:0;
 	fontFamily:Verdana;
 	font-weight: bold;
+}
+
+.bSearchStyle
+{
+	icon:Embed(source="/assets/magnifier-tool.png");
 /*	background:#FFFFFF;*/
 }

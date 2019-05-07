@@ -4,43 +4,78 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   xmlns:bearSearchAdvDataGrids="components.bearSearchAdvDataGrids.*"
 					   minHeight="300" minWidth="420" height="720" width="1280"
-					   styleName="blueBackgroundColor">
+					   styleName="blueBackgroundColor" currentState="initialSearch">
 	
 	<fx:Style source="/css/StyleSheet.css"/>
 	
-	<!--<fx:Script>
-	<![CDATA[
-	import mx.controls.Alert;
-	protected function bSearch_clickHandler(event:MouseEvent):void
-	{
-	// TODO Auto-generated method stub
-	Alert.show("Button Click", "Test", 4, this);
-	}
-	]]>
-	</fx:Script>-->
-	
+	<fx:Script>
+		<![CDATA[
+			/* protected function bSearch_clickHandler(event:MouseEvent):void
+			{
+			// TODO Auto-generated method stub
+			fadeInSearchResults.play();
+			fadeInSearchResults.end();
+			moveSearch.play();
+			moveSearch.end();
+			} */
+		]]>
+	</fx:Script>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<!--<s:Fade id="fadeInSearchResults"  duration="1000"  targets="{[pWebSearchResults, pAdvancedSearchResults]}" alphaFrom="0" alphaTo="1"/>
+		<s:Move id="moveSearch" xTo="5" yTo="10" target="{vgSearch}"/>-->
 	</fx:Declarations>
+	
+	<!-- View states definition -->
+	<s:states>
+		<s:State name="initialSearch"/>
+		<s:State name="search"/>
+		<!--<s:State name="maintainSearch"/>-->
+	</s:states>
+	
+	<s:transitions>
+		<!-- initialSearch state to search state transition definition -->
+		<s:Transition id="toSearch" fromState="*" toState="search">
+			<s:Sequence>
+				<s:RemoveAction/>
+				<s:Move target="{vgSearch}"/>
+				<s:Fade duration="1000" targets="{[pWebSearchResults, pAdvancedSearchResults, bPreviousState]}" alphaFrom="0" alphaTo="1"/>
+				<s:AddAction/>
+			</s:Sequence>
+		</s:Transition>
+		
+		<!-- search state to maintainSearch state transition definition -->
+		<!--<s:Transition id="toMaintainSearch" fromState="search" toState="maintainSearch" >
+		<s:Sequence targets="{[pWebSearchResults, pAdvancedSearchResults]}">
+		</s:Sequence>
+		</s:Transition>-->
+	</s:transitions>
+	
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
-		<s:Panel title="Web Search Results" left="10" right="567" top="103" bottom="93">
+		<s:Panel visible.initialSearch="false" id="pWebSearchResults" title="Web Search Results" left="10" right="567" top="103" bottom="93">
 			<s:controlBarContent>
 				<s:Label text="Bear images search results from the world wide web"/>
 			</s:controlBarContent>
 			<bearSearchAdvDataGrids:WebSearchAdvDataGrid/>
 		</s:Panel>
-		<s:Panel title="Advanced Search Results" left="604" right="10" top="103" bottom="93">
+		<s:Panel visible.initialSearch="false" id="pAdvancedSearchResults" title="Advanced Search Results" left="604" right="10" top="103" bottom="93">
 			<s:controlBarContent>
 				<s:Label text="Bear images search results using computer vision AI"/>
 			</s:controlBarContent>
 			<bearSearchAdvDataGrids:AdvancedSearchAdvDataGrid/>
 		</s:Panel>
-		<s:VGroup x="518" y="275">
-			<s:Label text="Bear Images Search Engine"/>
+		<s:VGroup id="vgSearch" x.initialSearch="518" y.initialSearch="275" x.search="5" y.search="10">
+			<s:Label text.initialSearch="Bear Images Search Engine" text.search="BISE"/>
 			<s:TextInput id="tiSearch" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"
 						 fontSize="18" text=""/>
+			<s:Button id="bInitialSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26" click="currentState='search'" includeIn="initialSearch"/>
+			<s:Button id="bSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26" click="currentState='search'" includeIn="search"/>
 		</s:VGroup>
-		<s:Button id="bSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26"/>
+		<s:Button id="bPreviousState" includeIn="search" x="262" y="31" height="26"
+				  label="Back" click="currentState='initialSearch'" styleName="bBackStyle"
+				  visible.initialSearch="false"/>
+		<s:DataGroup includeIn="search" x="261" y="31" width="72" height="26"/>
+		
 	</s:BorderContainer>
 </s:WindowedApplication>
