@@ -128,7 +128,7 @@
 		<s:Label x="5" y="10" text="Bear Images Search Engine"/>
 		<s:TextInput id="tiSearch" x="5" y="28" width="250" height="33" chromeColor="#FFFFFF"
 					 focusColor="#ECECEC" fontSize="18" text="" enter="tiSearch_enterHandler(event)"/>
-		<s:Panel left="10" right="10" top="103" bottom="93" title="Web Search Results">
+		<s:Panel left="10" right="567" top="103" bottom="93" title="Web Search Results">
 			<!--<s:controlBarContent>
 				<s:Label text="Bears from the the world wide web"/>
 			</s:controlBarContent>-->
@@ -151,11 +151,11 @@
 			</mx:AdvancedDataGrid>
 		</s:Panel>
 		
-		<!--<s:Panel left="604" right="10" top="103" bottom="93" title="Local Search Results">
+		<s:Panel left="604" right="10" top="103" bottom="93" title="Local Search Results">
 			<s:controlBarContent>
 				<s:Label text="Bears from the local database"/>
-			</s:controlBarContent>-->
-			<!--<mx:AdvancedDataGrid rowHeight="200" id="adgLocalSearch" 
+			</s:controlBarContent>
+			<mx:AdvancedDataGrid rowHeight="200" id="adgLocalSearch" 
 								 designViewDataType="flat" height="100%" width="100%">
 				<mx:columns>
 					<mx:AdvancedDataGridColumn width="50" dataField="bearImageID" headerText="ID"/>
@@ -163,7 +163,7 @@
 					<mx:AdvancedDataGridColumn dataField="col2" headerText="Description"/>
 				</mx:columns>
 			</mx:AdvancedDataGrid>
-		</s:Panel>-->
+		</s:Panel>
 		
 	</s:BorderContainer>
 </s:WindowedApplication>
