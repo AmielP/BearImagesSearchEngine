@@ -30,8 +30,14 @@
 			</s:controlBarContent>
 			<bearSearchAdvDataGrids:WebSearchAdvDataGrid/>
 		</s:Panel>
+		<s:Panel title="Advanced Search Results" left="604" right="10" top="103" bottom="93">
+			<s:controlBarContent>
+				<s:Label text="Bear images search results using computer vision AI"/>
+			</s:controlBarContent>
+			<bearSearchAdvDataGrids:AdvancedSearchAdvDataGrid/>
+		</s:Panel>
 		<s:VGroup x="518" y="275">
-			<s:Label text="BISE"/>
+			<s:Label text="Bear Images Search Engine"/>
 			<s:TextInput id="tiSearch" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"
 						 fontSize="18" text=""/>
 		</s:VGroup>

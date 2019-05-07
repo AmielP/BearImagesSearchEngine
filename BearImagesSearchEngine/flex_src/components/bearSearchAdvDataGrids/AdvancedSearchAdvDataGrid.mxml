@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="548" height="441">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Panel title="Advanced Search Results" left="604" right="10" top="103" bottom="93">
-		<s:controlBarContent>
-			<s:Label text="Bear images search results using computer vision AI"/>
-		</s:controlBarContent>
 		<mx:AdvancedDataGrid id="adgAdvancedSearch" designViewDataType="flat" rowHeight="200" height="100%" width="100%">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn dataField="bearImageID" headerText="ID" width="50"/>
+				<mx:AdvancedDataGridColumn dataField="bearImageID" headerText="ID" width="100"/>
 				<mx:AdvancedDataGridColumn dataField="content" headerText="Bear Image" width="900"/>
+				<mx:AdvancedDataGridColumn dataField="tagSentence" headerText="Description" width="200" wordWrap="true" editable="true"/>
 			</mx:columns>
 		</mx:AdvancedDataGrid>
-	</s:Panel>
 </s:Group>
