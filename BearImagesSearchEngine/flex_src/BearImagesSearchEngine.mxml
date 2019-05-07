@@ -24,7 +24,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
-		<s:Panel title="Web Search Results" left="10" right="10" top="103" bottom="93">
+		<s:Panel title="Web Search Results" left="10" right="567" top="103" bottom="93">
 			<s:controlBarContent>
 				<s:Label text="Bear images search results from the world wide web"/>
 			</s:controlBarContent>
