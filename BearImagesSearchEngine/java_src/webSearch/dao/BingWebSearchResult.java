@@ -1,4 +1,4 @@
-package webSearch;
+package webSearch.dao;
 
 //Credits to https://github.com/Azure-Samples/cognitive-services-REST-api-samples/blob/master/java/Search/BingImageSearchv7Quickstart.java
 

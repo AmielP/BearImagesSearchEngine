@@ -1,4 +1,4 @@
-package webSearch;
+package webSearch.vo;
 
 import java.util.Date;
 

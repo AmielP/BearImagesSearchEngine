@@ -1,4 +1,4 @@
-package webSearch;
+package webSearch.dao;
 
 import java.util.HashMap;
 
