@@ -17,6 +17,9 @@
     <application path="BearImagesSearchEngine.mxml">
       <airExcludes/>
     </application>
+    <application path="BearImagesSearchEngine.as">
+      <airExcludes/>
+    </application>
   </applications>
   <modules/>
   <buildCSSFiles/>
