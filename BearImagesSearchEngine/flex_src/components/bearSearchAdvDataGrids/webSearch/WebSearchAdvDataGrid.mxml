@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<custom:WebSearchAdvDataGridClass xmlns:fx="http://ns.adobe.com/mxml/2009" 
+								  xmlns:s="library://ns.adobe.com/flex/spark" 
+								  xmlns:mx="library://ns.adobe.com/flex/mx"
+								  xmlns:custom="components.bearSearchAdvDataGrids.webSearch.*" 
+								  designViewDataType="flat" rowHeight="200" height="100%" width="100%"
+								  allowMultipleSelection="true"
+								  wordWrap="true" editable="true">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<custom:groupedColumns>
+		<mx:AdvancedDataGridColumn dataField="bearImageID" headerText="ID" width="100"/>
+		<mx:AdvancedDataGridColumn dataField="contentURL" headerText="Bear Image" width="900"/>
+		<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" />
+	</custom:groupedColumns>
+</custom:WebSearchAdvDataGridClass >
+<!--width="585" height="441"Goes inside the top tag-->

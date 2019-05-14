@@ -2,8 +2,8 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   xmlns:main="*"
-					   xmlns:bearSearchAdvDataGrids="components.bearSearchAdvDataGrids.*"
+					   xmlns:webBearSearchAdvDataGrids="components.bearSearchAdvDataGrids.webSearch.*"
+					   xmlns:advancedBearSearchAdvDataGrids="components.bearSearchAdvDataGrids.advancedSearch.*"
 					   minHeight="300" minWidth="420" height="720" width="1280"
 					   styleName="blueBackgroundColor" currentState="initialSearch">
 	
@@ -58,13 +58,13 @@
 			<s:controlBarContent>
 				<s:Label text="Bear images search results from the world wide web"/>
 			</s:controlBarContent>
-			<bearSearchAdvDataGrids:WebSearchAdvDataGrid/>
+			<webBearSearchAdvDataGrids:WebSearchAdvDataGrid/>
 		</s:Panel>
 		<s:Panel visible.initialSearch="false" id="pAdvancedSearchResults" title="Advanced Search Results" left="604" right="10" top="103" bottom="93">
 			<s:controlBarContent>
 				<s:Label text="Bear images search results using computer vision AI"/>
 			</s:controlBarContent>
-			<bearSearchAdvDataGrids:AdvancedSearchAdvDataGrid/>
+			<advancedBearSearchAdvDataGrids:AdvancedSearchAdvDataGrid/>
 		</s:Panel>
 		<s:VGroup id="vgSearch" x.initialSearch="518" y.initialSearch="275" x.search="5" y.search="10">
 			<s:Label text.initialSearch="Bear Images Search Engine" text.search="BISE"/>
