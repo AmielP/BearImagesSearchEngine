@@ -25,6 +25,8 @@ package components.base
 		public var tiSearch:TextInput = new TextInput();
 		public var bInitialSearch:Button = new Button();
 		public var bSearch:Button = new Button();
+		// Bindable button object in order to sustain the effects
+		[Bindable]
 		public var bPreviousState:Button = new Button();
 		
 		public function BearSearchBaseClass()

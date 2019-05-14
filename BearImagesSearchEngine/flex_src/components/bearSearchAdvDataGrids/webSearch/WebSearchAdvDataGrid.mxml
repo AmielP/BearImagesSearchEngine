@@ -15,5 +15,5 @@
 		<mx:AdvancedDataGridColumn dataField="contentURL" headerText="Bear Image" width="900"/>
 		<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" />
 	</custom:groupedColumns>
-</custom:WebSearchAdvDataGridClass >
+</custom:WebSearchAdvDataGridClass>
 <!--width="585" height="441"Goes inside the top tag-->

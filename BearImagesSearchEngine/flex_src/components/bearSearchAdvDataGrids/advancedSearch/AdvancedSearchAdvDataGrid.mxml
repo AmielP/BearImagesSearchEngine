@@ -9,7 +9,6 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	
 	<custom:groupedColumns>
 		<mx:AdvancedDataGridColumn dataField="bearImageID" headerText="ID" width="100"/>
 		<mx:AdvancedDataGridColumn dataField="content" headerText="Bear Image" width="900"/>
