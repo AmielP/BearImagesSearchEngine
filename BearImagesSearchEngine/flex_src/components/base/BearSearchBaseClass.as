@@ -56,9 +56,6 @@ package components.base
 			
 		}
 		
-		private function previousStateHandler(event:MouseEvent):void
-		{
-			
-		}
+		private function previousStateHandler(event:MouseEvent):void{};
 	}
 }
