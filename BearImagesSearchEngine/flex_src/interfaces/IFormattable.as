@@ -1,6 +1,6 @@
 package interfaces
 {
-	public interface IFormattable extends IHandler
+	public interface IFormattable 
 	{	
 		function get amf():AMFClass;
 		function set amf(value:AMFClass):void;

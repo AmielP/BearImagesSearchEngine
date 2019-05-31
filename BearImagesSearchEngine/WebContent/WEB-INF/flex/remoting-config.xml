@@ -10,5 +10,11 @@
     <default-channels>
         <channel ref="my-amf"/>
     </default-channels>
+    
+    <destination id="gateway-webBearImageData">
+    	<properties>
+    		<source>webSearch.dao.BingWebSearchResult</source>
+    	</properties>
+    </destination>
 
 </service>

@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class BingWebSearchResultVO
 {
+	private int contentID;
 	private String webSearchUrl;
 	private String name;
 	private String thumbnailUrl;
@@ -17,6 +18,14 @@ public class BingWebSearchResultVO
 	private int height;
 	private String thumbnail; //has two parameters: height and width
 	
+	public int getContentID()
+	{
+		return contentID;
+	}
+	public void setContentID(int contentID)
+	{
+		this.contentID = contentID;
+	}
 	public String getWebSearchUrl()
 	{
 		return webSearchUrl;

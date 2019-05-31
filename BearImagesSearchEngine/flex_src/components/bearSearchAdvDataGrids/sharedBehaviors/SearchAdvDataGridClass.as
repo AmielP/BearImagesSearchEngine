@@ -1,6 +1,7 @@
 package components.bearSearchAdvDataGrids.sharedBehaviors
 {
 	import interfaces.IFormattable;
+	import interfaces.IHandler;
 	import interfaces.IRemotable;
 	import interfaces.IRemoteObject;
 	
@@ -11,23 +12,50 @@ package components.bearSearchAdvDataGrids.sharedBehaviors
 	
 	public class SearchAdvDataGridClass extends AdvancedDataGrid
 	{
-		private var _roBearImageData:IRemoteObject;
+		private var _remotable:IRemotable; // FlyBehavior flyBehavior
+		private var _remoteObject:IRemoteObject; //SwimBehavior swimBehavior
+		private var _formattable:IFormattable; // QuackBehavior quackBehavior
 		
 		private var _dpSearch:ArrayCollection;
+		
+		public function performFly():void
+		{
+			_remotable.remoteObject;
+		}
 		
 		public function SearchAdvDataGridClass()
 		{
 			super();
 		}
 		
-		protected function get roBearImageData():IRemoteObject
+		public function get remotable():IRemotable // getFlyBehavior()
 		{
-			return _roBearImageData;
+			return _remotable; // return flyBehavior;
 		}
 		
-		protected function set roBearImageData(value:IRemoteObject):void
+		public function set remotable(value:IRemotable):void //setFlyBehavior(flyBehavior)
 		{
-			_roBearImageData = value;
+			_remotable = value; // this.flyBehavior = flyBehavior;
+		}
+		
+		protected function get remoteObject():IRemoteObject // getSwimBehavior()
+		{
+			return _remoteObject; // return swimBehavior;
+		}
+		
+		protected function set remoteObject(value:IRemoteObject):void // setSwimBehavior(swimBehavior)
+		{
+			_remoteObject = value; // this.swimBehavior = swimBehavior;
+		}
+		
+		protected function get formattable():IFormattable // getQuackBehavior()
+		{
+			return _formattable; // return quackBehavior;
+		}
+		
+		protected function set formattable(value:IFormattable):void // setQuackBehavior(quackBehavior)
+		{
+			_formattable = value; // this.quackBehavior = quackBehavior;
 		}
 
 		protected function get dpSearch():ArrayCollection
