@@ -16,7 +16,6 @@ package components.bearSearchAdvDataGrids.advancedSearch
 		public function AdvancedSearchAdvDataGridClass()
 		{
 			super();
-//			roBearImageData = new RemoteObjectAdvancedSearch();
 		}
 	}
 }

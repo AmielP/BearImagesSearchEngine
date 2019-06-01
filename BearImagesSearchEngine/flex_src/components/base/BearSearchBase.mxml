@@ -35,30 +35,6 @@
 		<s:Fade id="fadeInPreviousState" duration="2000" alphaFrom="0" alphaTo="1" target="{bPreviousState}"/>
 		<s:Fade id="fadeOutPreviousState" duration="500" alphaFrom="1" alphaTo="0" target="{bPreviousState}"/>
 	</fx:Declarations>
-	<!-- When a tag is created outside of a container and within a custom component, then the object must be defined using the same namespace for all of its properties -->
-	<!--<base:states>
-		<s:State name="initialSearch"/>
-		<s:State name="search"/>
-		<s:State name="maintainSearch"/>
-	</base:states>-->
-	
-	<!--<base:transitions>-->
-		<!-- initialSearch state to search state transition definition -->
-		<!--<s:Transition id="toSearch" fromState="*" toState="search">
-			<s:Sequence>
-				<s:RemoveAction/>
-				<s:Move target="{vgSearch}"/>
-				<s:Fade duration="1000" targets="{[pWebSearchResults, pAdvancedSearchResults, bPreviousState]}" alphaFrom="0" alphaTo="1"/>
-				<s:AddAction/>
-			</s:Sequence>
-		</s:Transition>-->
-		
-		<!-- search state to maintainSearch state transition definition -->
-		<!--<s:Transition id="toMaintainSearch" fromState="search" toState="search" >
-		<s:Sequence targets="{[pWebSearchResults, pAdvancedSearchResults]}">
-		</s:Sequence>
-		</s:Transition>
-	</base:transitions>-->
 	
 	
 	<s:BorderContainer left="57" right="57" top="10" bottom="10">
@@ -77,16 +53,11 @@
 		<s:VGroup id="vgSearch" x="518" y="275">
 			<s:Label text="Bear Images Search Engine"/>
 			<s:TextInput id="tiSearch" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"
-						 fontSize="18" text=""/>
-			<!--<s:TextInput id="tiSearch" x="665" y="334" width="250" height="33" chromeColor="#FFFFFF" focusColor="#ECECEC"
-						 fontSize="18" text="" enter="currentState='search'" includeIn="search"/>-->
+						 fontSize="18" text="" enter="changeToNextPage()"/>
 			<s:Button id="bSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26" click="changeToNextPage()"/>
-<!--			<s:Button id="bSearch" x="665" y="334" label="Search" styleName="bSearchStyle" height="26" click="currentState='search'" includeIn="search"/>
--->		</s:VGroup>
+		</s:VGroup>
 		<s:Button id="bPreviousState" x="262" y="31" height="26"
 				  label="Back" click="changeToPreviousPage()" styleName="bBackStyle"
 				  visible="false"/>
-<!--		<s:DataGroup includeIn="search" x="261" y="31" width="72" height="26"/>
--->		
 	</s:BorderContainer>
 </base:BearSearchBaseClass>

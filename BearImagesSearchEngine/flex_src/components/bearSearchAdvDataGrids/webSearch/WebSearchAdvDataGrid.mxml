@@ -9,10 +9,18 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-
+	
 	<custom:groupedColumns>
 		<mx:AdvancedDataGridColumn dataField="contentID" headerText="ID" width="100" editable="false"/>
-		<mx:AdvancedDataGridColumn dataField="contentUrl" headerText="Bear Image" width="900" editable="false"/>
+		<mx:AdvancedDataGridColumn dataField="contentUrl" headerText="Bear Image" width="900" editable="false">
+			<mx:itemRenderer>
+				<fx:Component>
+					<mx:HBox height="30" width="30" horizontalAlign="center">
+						<s:Image height="100%" width="100%" source="{data.contentUrl}"/>
+					</mx:HBox>
+				</fx:Component>
+			</mx:itemRenderer>
+		</mx:AdvancedDataGridColumn>
 		<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" editable="true"/>
 	</custom:groupedColumns>
 </custom:WebSearchAdvDataGridClass>

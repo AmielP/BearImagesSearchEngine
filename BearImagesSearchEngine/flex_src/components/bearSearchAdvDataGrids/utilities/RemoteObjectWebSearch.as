@@ -2,8 +2,6 @@ package components.bearSearchAdvDataGrids.utilities
 {
 	import components.base.BearSearchBase;
 	
-	import events.BearSearchEvent;
-	
 	import interfaces.IRemotable;
 	import interfaces.ISearch;
 	
