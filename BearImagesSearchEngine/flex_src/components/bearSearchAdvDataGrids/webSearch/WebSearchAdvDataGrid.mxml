@@ -5,7 +5,7 @@
 								  xmlns:custom="components.bearSearchAdvDataGrids.webSearch.*"
 								  width="100%" height="100%" allowMultipleSelection="true"
 								  designViewDataType="flat" editable="true" fontFamily="Verdana"
-								  rowHeight="200" wordWrap="true">
+								  rowHeight="200" wordWrap="true" resizableColumns="false">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
