@@ -5,7 +5,7 @@
 									   xmlns:custom="components.bearSearchAdvDataGrids.advancedSearch.*"
 									   designViewDataType="flat" rowHeight="200" height="100%" width="100%"
 									   allowMultipleSelection="true"
-									   wordWrap="true" editable="true">
+									   wordWrap="true" editable="true" resizableColumns="false">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
