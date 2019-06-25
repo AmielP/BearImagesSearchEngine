@@ -5,6 +5,8 @@ package components.base
 	import components.bearSearchAdvDataGrids.utilities.RemoteObjectWebSearch;
 	import components.bearSearchAdvDataGrids.webSearch.WebSearchAdvDataGrid;
 	
+	import flash.desktop.NativeApplication;
+	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -56,10 +58,19 @@ package components.base
 		// and interact with child components.
 		public function creationCompleteHandler(event:FlexEvent):void
 		{
+			addEventListener(KeyboardEvent.KEY_DOWN, controlQHandler);
 			bSearch.addEventListener(MouseEvent.CLICK, bSearch_clickHandler);
 			tiSearch.addEventListener(FlexEvent.ENTER, tiSearch_enterHandler);
 			
 			bPreviousState.addEventListener(MouseEvent.CLICK, bpreviousState_clickHandler);
+		}
+		
+		private function controlQHandler(event:KeyboardEvent):void
+		{
+			if (event.ctrlKey && event.keyCode == 81)
+			{
+				NativeApplication.nativeApplication.exit();
+			}
 		}
 		
 		private function tiSearch_enterHandler(event:FlexEvent):void

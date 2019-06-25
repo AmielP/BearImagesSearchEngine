@@ -1,5 +1,6 @@
 package webSearch.vo;
 
+//import java.sql.Blob;
 import java.util.Date;
 
 public class BingWebSearchResultVO
@@ -17,6 +18,7 @@ public class BingWebSearchResultVO
 	private int width;
 	private int height;
 	private String thumbnail; //has two parameters: height and width
+	private byte[] imageData;
 	
 	public int getContentID()
 	{
@@ -122,6 +124,12 @@ public class BingWebSearchResultVO
 	{
 		this.thumbnail = thumbnail;
 	}
-	
-	
+	public byte[] getImageData()
+	{
+		return imageData;
+	}
+	public void setImageData(byte[] imageData)
+	{
+		this.imageData = imageData;
+	}
 }

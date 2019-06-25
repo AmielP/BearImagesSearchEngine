@@ -3,8 +3,19 @@ package webSearch.dao;
 //Courtesy of https://github.com/Azure-Samples/cognitive-services-REST-api-samples/blob/master/java/Search/BingImageSearchv7Quickstart.java
 
 import java.net.*;
+import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
+import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.*;
+
+import javax.imageio.ImageIO;
+//import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
@@ -13,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import gateway.ConnectionHelper;
 import webSearch.vo.BingWebSearchResultVO;
 
 public class BingWebSearchResult
@@ -27,10 +39,23 @@ public class BingWebSearchResult
 	private String searchTerm = "";
 	private String bearSearchTerm = "\"wildlife\" AND \"ursidae\" AND \"bear\" AND ";
 
+	private static final int NUMBER_OF_MAX_SEARCHES = 50;
+
 	private JsonObject json = null;
 	private JsonArray jsonArray;
 
 	private JsonObject jsonObjectResult;
+
+	private SecureRandom secureRandom;
+
+
+	// Can continue later for testing and fixing subscriptionKey issue
+	private void testRandomSecurity()
+	{
+		secureRandom = new SecureRandom();
+		byte bytes[] = new byte[20];
+		secureRandom.nextBytes(bytes);
+	}
 
 	private JsonObject convertJsonTextToJsonObject(String json_text)
 	{
@@ -85,11 +110,11 @@ public class BingWebSearchResult
 		return results;
 	}
 
-	private ArrayList<BingWebSearchResultVO> readBingWebSearchData(JsonObject json)
+	private ArrayList<BingWebSearchResultVO> readBingWebSearchData(JsonObject jO) /*throws IOException*/
 	{
 		ArrayList<BingWebSearchResultVO> headerList = new ArrayList<BingWebSearchResultVO>();
 
-		jsonArray = json.getAsJsonArray("value");
+		jsonArray = jO.getAsJsonArray("value");
 
 		for(int i = 0; i < jsonArray.size(); i++)
 		{
@@ -98,11 +123,33 @@ public class BingWebSearchResult
 			jsonObjectResult = jsonArray.get(i).getAsJsonObject();
 
 			// Print each of the URL results
-						System.out.println("Result " + (i + 1) + ": " + jsonObjectResult.get("contentUrl").getAsString());
-
-			bingWebSearchData.setContentID((i + 1));
+			System.out.println("Result " + (i + 1) + ": " + jsonObjectResult.get("contentUrl").getAsString());
+//			bingWebSearchData.setContentID((i + 1));
 			bingWebSearchData.setContentUrl(jsonObjectResult.get("contentUrl").getAsString());
 			bingWebSearchData.setName(jsonObjectResult.get("name").getAsString());
+
+			//			String s
+			//			
+			//			bingWebSearchData.setImageData(jsonObjectResult.get("contentUrl").getAsString());
+
+			//			try
+			//			{
+			//				BufferedImage bufferedImage = ImageIO.read(new URL(jsonObjectResult.get("contentUrl").getAsString()));
+			//				
+			//				ImageIO.write(bufferedImage, "jpg", new File("D://BearImages/" + i + ".jpg"));
+			//			} 
+			//			catch (MalformedURLException e)
+			//			{
+			//				// TODO Auto-generated catch block
+			//				e.printStackTrace();
+			//				throw e;
+			//			} 
+			//			catch (IOException e)
+			//			{
+			//				// TODO Auto-generated catch block
+			//				e.printStackTrace();
+			//				throw e;
+			//			}
 
 			headerList.add(bingWebSearchData);
 		}
@@ -166,7 +213,416 @@ public class BingWebSearchResult
 		{
 		}
 		numberOfTimesUserSearched++;
+
 		return readBingWebSearchData(json);
+	}
+
+	// Started working because kept faithful to the SQLite tutorial of creating a table
+	public void createWebResultsTable() throws SQLException
+	{
+		Connection connection = null;
+		Statement preparedStatement = null;
+		
+		String sql = "CREATE TABLE IF NOT EXISTS WEB_SEARCH_RESULT ( "
+				+ " WEB_SEARCH_RESULT_ID INTEGER PRIMARY KEY, "
+				+ " CONTENT_URL TEXT, "
+				+ " NAME TEXT"
+				+ ")";
+
+//		String sql = "CREATE TABLE IF NOT EXISTS WEB_SEARCH_RESULT ( "
+//				+ " WEB_SEARCH_RESULT_ID INTEGER PRIMARY KEY, "
+//				+ " CONTENT_URL TEXT, "
+//				+ " NAME TEXT, "
+//				+ " IMAGE_DATA BLOB"
+//				+ ")";
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.createStatement();
+			//			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.execute(sql);
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR: createWebResultsTable");
+			System.out.println(e.getMessage() + "\n");
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch (SQLException ignore) {}
+			}
+			// Connection is open because my local database and no server is using up the database resources
+			//			ConnectionHelper.close(connection);
+		}
+	}
+
+	public ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException
+	{
+		ArrayList<BingWebSearchResultVO> list = new ArrayList<BingWebSearchResultVO>();
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
+		String sql = "SELECT WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME FROM WEB_SEARCH_RESULT EXCEPT SELECT ILLEGAL_WEBSITE_ID, ILLEGAL_CONTENT_URL, NAME FROM ILLEGAL_WEBSITE";
+//		String sql = "SELECT WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME, IMAGE_DATA FROM WEB_SEARCH_RESULT";
+//		String sql = "SELECT WEB_SEARCH_RESULT_ID, IMAGE_DATA, NAME FROM WEB_SEARCH_RESULT";
+		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next())
+			{
+				BingWebSearchResultVO data = new BingWebSearchResultVO();
+				// Can be in any order of setting I want so long as the indexing starts from index 1,
+				// the data types match the variable type you are setting,
+				// and the index positions in the VO match the datagrid
+				data.setContentID(resultSet.getInt(1));
+				data.setContentUrl(resultSet.getString(2));
+				data.setName(resultSet.getString(3));
+//				data.setImageData(resultSet.getBytes(4));
+				
+//				data.setContentID(resultSet.getInt(1));
+//				data.setImageData(resultSet.getBytes(2));
+//				data.setName(resultSet.getString(3));
+
+				list.add(data);
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR: selectWebResultsData");
+			System.out.println(e.getMessage() + "\n");
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch (SQLException ignore) {}
+			}
+		}
+		return list;
+	}
+
+	// Add measures to skip forbidden url addresses in the workplace.
+	public void insertWebResultsData(ArrayList<BingWebSearchResultVO> insertList) throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement legalPreparedStatement = null;
+		PreparedStatement illegalPreparedStatement = null;
+		
+		int total = 0;
+		
+		
+		String legalSql = "INSERT INTO WEB_SEARCH_RESULT (CONTENT_URL, NAME) "
+				+ "VALUES (?,?)";
+		String illegalSql = "INSERT INTO ILLEGAL_WEBSITE (ILLEGAL_CONTENT_URL, NAME) "
+				+ "VALUES (?,?)";
+		
+//		String sql = "INSERT INTO WEB_SEARCH_RESULT (CONTENT_URL, NAME, IMAGE_DATA) "
+//				+ "VALUES (?,?,?)";
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			legalPreparedStatement = connection.prepareStatement(legalSql);
+			illegalPreparedStatement = connection.prepareStatement(illegalSql);
+
+			for(int i = 0; i < insertList.size() /*NUMBER_OF_MAX_SEARCHES*/; i++)
+			{
+				try
+				{
+					if (total == (NUMBER_OF_MAX_SEARCHES))
+					{
+						break;
+					}
+					System.out.println(i + ". new URL(): " + insertList.get(i).getContentUrl());
+					// BLOB for later.
+					URL imageData = new URL(insertList.get(i).getContentUrl());
+					
+//					BufferedImage bufferedImage = ImageIO.read(imageData);
+//					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//					ImageIO.write(bufferedImage, "jpg", byteArrayOutputStream);
+					ImageIO.read(imageData);
+//					byte[] imageDataToByteArray = byteArrayOutputStream.toByteArray();
+					
+//					preparedStatement.setInt(1, insertList.get(i).getContentID());
+					legalPreparedStatement.setString(1, insertList.get(i).getContentUrl());
+					legalPreparedStatement.setString(2, insertList.get(i).getName());
+//					preparedStatement.setBytes(3, imageDataToByteArray);
+//					preparedStatement.setBytes(4, insertList.get(i).getImageData());
+					legalPreparedStatement.addBatch();
+				
+					total++;
+					System.out.println("TOTAL: " + total);
+				}
+//				catch (IOException ioe)
+//				{
+//					// Add link to ILLEGAL_LINK table
+//					// Skip to next link
+////					System.out.println("OOPSIE: image reading problem");
+////					System.out.println(ioe.getMessage());
+////					ioe.printStackTrace(System.out);
+//					i++;
+//					continue;
+//				}
+//				catch (NullPointerException npe)
+//				{
+//					// Add link to ILLEGAL_LINK table
+//					// Skip to next link
+////					System.out.println("OOPSIE: image reading problem");
+////					System.out.println(ioe.getMessage());
+////					ioe.printStackTrace(System.out);
+//					i++;
+//					continue;
+//				}
+				catch (Exception e)
+				{
+					illegalPreparedStatement.setString(1, insertList.get(i).getContentUrl());
+					illegalPreparedStatement.setString(2, insertList.get(i).getName());
+					System.out.println("SKIPPED (" + i + ".) new URL(): " + insertList.get(i).getContentUrl() + " NAME: " + insertList.get(i).getName());
+					illegalPreparedStatement.addBatch();
+					i++;
+					continue;
+				}
+			}
+			legalPreparedStatement.executeBatch();
+			illegalPreparedStatement.executeBatch();
+		}
+//		catch (IOException ioe)
+//		{
+//			System.out.println("ERROR: image reading problem");
+//			System.out.println(ioe.getMessage());
+//		}
+		catch (SQLException sqle)
+		{
+			System.out.println("ERROR: insertWebResultsData");
+			System.out.println(sqle.getMessage() + "\n");
+		}
+		finally
+		{
+			if (legalPreparedStatement != null || illegalPreparedStatement != null)
+			{
+				try
+				{
+					legalPreparedStatement.close();
+					illegalPreparedStatement.close();
+				}
+				catch (SQLException ignore) {}
+			}
+		}
+	}
+
+	public void updateWebResultsData(ArrayList<BingWebSearchResultVO> updateList) throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "UPDATE WEB_SEARCH_RESULT SET CONTENT_URL = ?, "
+				+ "NAME = ?, "
+				+ "IMAGE_DATA = ? "
+				+ "WHERE WEB_SEARCH_RESULT_ID = ?";
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+
+			for(int i = 0; i < /*updateList.size()*/NUMBER_OF_MAX_SEARCHES; i++)
+			{
+				preparedStatement.setString(1, updateList.get(i).getContentUrl());
+				preparedStatement.setString(2, updateList.get(i).getName());
+				preparedStatement.setBytes(3, updateList.get(i).getImageData());
+				preparedStatement.setInt(4, updateList.get(i).getContentID());
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR: updateWebResultsData");
+			System.out.println(e.getMessage() + "\n");
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch (SQLException ignore) {}
+			}
+		}
+	}
+
+	// Basic insert and update using condition statement
+	public void insertAndUpdateWebResultsData(ArrayList<BingWebSearchResultVO> insertAndUpdateList, boolean isNewDataInTable) throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String insertSQL = "INSERT INTO WEB_SEARCH_RESULT (CONTENT_URL, NAME, IMAGE_DATA, WEB_SEARCH_RESULT_ID) "
+				+ "VALUES (?,?,?,?)";
+		String updateSQL = "UPDATE WEB_SEARCH_RESULT SET CONTENT_URL = ?, "
+				+ "NAME = ?, "
+				+ "IMAGE_DATA = ? "
+				+ "WHERE WEB_SEARCH_RESULT_ID = ?";
+
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			
+			if (isNewDataInTable)
+			{
+				preparedStatement = connection.prepareStatement(insertSQL);
+			}
+			else
+			{
+				preparedStatement = connection.prepareStatement(updateSQL);
+			}
+			
+			for (int i = 0; i < NUMBER_OF_MAX_SEARCHES; i++)
+			{
+				preparedStatement.setString(1, insertAndUpdateList.get(i).getContentUrl());
+				preparedStatement.setString(2, insertAndUpdateList.get(i).getName());
+				preparedStatement.setBytes(3, insertAndUpdateList.get(i).getImageData());
+				preparedStatement.setInt(4, insertAndUpdateList.get(i).getContentID());
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR: insertAndUpdateWebResultsData");
+			System.out.println(e.getMessage());
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch (SQLException ignore) {}
+			}
+		}
+	}
+
+	// Advanced insert and update using upsert statement
+	public void upsertWebResultsData(ArrayList<BingWebSearchResultVO> upsertList) throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "INSERT INTO WEB_SEARCH_RESULT (WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME, IMAGE_DATA) "
+				+ "VALUES (?,?,?,?) ON CONFLICT(WEB_SEARCH_RESULT_ID) DO UPDATE SET CONTENT_URL=excluded.CONTENT_URL, NAME=excluded.NAME, IMAGE_DATA=excluded.IMAGE_DATA";
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			//						connection.setAutoCommit(false);
+			//						connection.commit();
+
+			preparedStatement = connection.prepareStatement(sql);
+			for(int i = 0; i < /*upsertList.size()*/NUMBER_OF_MAX_SEARCHES; i++)
+			{
+				preparedStatement.setInt(1, upsertList.get(i).getContentID());
+				preparedStatement.setString(2, upsertList.get(i).getContentUrl());
+				preparedStatement.setString(3, upsertList.get(i).getName());
+				preparedStatement.setBytes(4, upsertList.get(i).getImageData());
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+
+			// executeUpdate() is for one record in the database.
+			//			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR: upsertWebResultsData");
+			System.out.println(e.getMessage() + "\n");
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch (SQLException ignore) {}
+			}
+			// Connection is open because my local database and no server is using up the database resources
+			//			ConnectionHelper.close(connection);
+		}
+	}
+	
+	public void deleteWebResultsData() throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "DELETE FROM WEB_SEARCH_RESULT";
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			System.out.print("ERROR: deleteWebResultsData");
+			System.out.println(e.getMessage() + "\n");
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch(SQLException ignore) {}
+			}
+		}
+	}
+	
+	public void dropTable() throws SQLException
+	{
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "DROP TABLE IF EXISTS WEB_SEARCH_RESULT";
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			System.out.print("ERROR: dropTable");
+			System.out.println(e.getMessage() + "\n");
+		}
+		finally
+		{
+			if (preparedStatement != null)
+			{
+				try
+				{
+					preparedStatement.close();
+				}
+				catch(SQLException ignore) {}
+			}
+		}
 	}
 }
 
