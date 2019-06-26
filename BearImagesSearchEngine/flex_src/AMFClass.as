@@ -21,6 +21,8 @@ package
 			amfChannel = new AMFChannel('my-amf', amfUrl);
 			amfClassChannelSet = new ChannelSet();
 			amfClassChannelSet.addChannel(amfChannel);
+			amfChannel.connectTimeout = 300;
+			amfChannel.requestTimeout = 300;
 		}
 		
 		public function getAMFUrl():String
