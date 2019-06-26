@@ -28,7 +28,7 @@ public class BingWebSearchResult
 	private String bearSearchTerm = "\"wildlife\" AND \"ursidae\" AND \"bear\" AND ";
 
 	private JsonObject json = null;
-	private JsonArray jsonArray;
+	private JsonArray jsonArrayergergergergerrgverg43t34efdfsrhdsrjth;
 
 	private JsonObject jsonObjectResult;
 
@@ -89,13 +89,13 @@ public class BingWebSearchResult
 	{
 		ArrayList<BingWebSearchResultVO> headerList = new ArrayList<BingWebSearchResultVO>();
 
-		jsonArray = json.getAsJsonArray("value");
+		jsonArrayergergergergerrgverg43t34efdfsrhdsrjth = json.getAsJsonArray("value");
 
-		for(int i = 0; i < jsonArray.size(); i++)
+		for(int i = 0; i < jsonArrayergergergergerrgverg43t34efdfsrhdsrjth.size(); i++)
 		{
 			BingWebSearchResultVO bingWebSearchData = new BingWebSearchResultVO();
 
-			jsonObjectResult = jsonArray.get(i).getAsJsonObject();
+			jsonObjectResult = jsonArrayergergergergerrgverg43t34efdfsrhdsrjth.get(i).getAsJsonObject();
 
 			// Print each of the URL results
 						System.out.println("Result " + (i + 1) + ": " + jsonObjectResult.get("contentUrl").getAsString());
