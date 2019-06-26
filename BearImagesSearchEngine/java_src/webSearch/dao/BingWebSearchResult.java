@@ -226,8 +226,9 @@ public class BingWebSearchResult
 		String sql = "CREATE TABLE IF NOT EXISTS WEB_SEARCH_RESULT ( "
 				+ " WEB_SEARCH_RESULT_ID INTEGER PRIMARY KEY, "
 				+ " CONTENT_URL TEXT, "
-				+ " NAME TEXT"
-				+ ")";
+				+ " NAME TEXT, "
+				+ " CONSTRAINT CONTENT_URL_UNIQUE UNIQUE (CONTENT_URL) ON CONFLICT REPLACE"
+				+ ");";
 
 //		String sql = "CREATE TABLE IF NOT EXISTS WEB_SEARCH_RESULT ( "
 //				+ " WEB_SEARCH_RESULT_ID INTEGER PRIMARY KEY, "
@@ -270,9 +271,12 @@ public class BingWebSearchResult
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
-		String sql = "SELECT WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME FROM WEB_SEARCH_RESULT EXCEPT SELECT ILLEGAL_WEBSITE_ID, ILLEGAL_CONTENT_URL, NAME FROM ILLEGAL_WEBSITE";
+		String sql = "SELECT WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME\r\n" + 
+				"FROM WEB_SEARCH_RESULT\r\n" + 
+				"WHERE CONTENT_URL NOT IN (SELECT ILLEGAL_CONTENT_URL FROM ILLEGAL_WEBSITE)";
 //		String sql = "SELECT WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME, IMAGE_DATA FROM WEB_SEARCH_RESULT";
 //		String sql = "SELECT WEB_SEARCH_RESULT_ID, IMAGE_DATA, NAME FROM WEB_SEARCH_RESULT";
+//		String sql = "SELECT WEB_SEARCH_RESULT_ID, CONTENT_URL, NAME FROM WEB_SEARCH_RESULT";
 		
 		try
 		{
@@ -282,12 +286,15 @@ public class BingWebSearchResult
 			while(resultSet.next())
 			{
 				BingWebSearchResultVO data = new BingWebSearchResultVO();
+				
 				// Can be in any order of setting I want so long as the indexing starts from index 1,
 				// the data types match the variable type you are setting,
 				// and the index positions in the VO match the datagrid
 				data.setContentID(resultSet.getInt(1));
 				data.setContentUrl(resultSet.getString(2));
 				data.setName(resultSet.getString(3));
+				
+				System.out.println("Selecting from " + data.getContentUrl());
 //				data.setImageData(resultSet.getBytes(4));
 				
 //				data.setContentID(resultSet.getInt(1));
@@ -326,8 +333,11 @@ public class BingWebSearchResult
 		int total = 0;
 		
 		
-		String legalSql = "INSERT INTO WEB_SEARCH_RESULT (CONTENT_URL, NAME) "
-				+ "VALUES (?,?)";
+		String legalSql = "INSERT INTO WEB_SEARCH_RESULT(CONTENT_URL, NAME) "
+				+ "VALUES(?,?) "
+				+ "UNION SELECT CONTENT_URL, NAME FROM WEB_SEARCH_RESULT "
+				+ "WHERE CONTENT_URL NOT IN (SELECT ILLEGAL_CONTENT_URL FROM ILLEGAL_WEBSITE)";
+		
 		String illegalSql = "INSERT INTO ILLEGAL_WEBSITE (ILLEGAL_CONTENT_URL, NAME) "
 				+ "VALUES (?,?)";
 		
