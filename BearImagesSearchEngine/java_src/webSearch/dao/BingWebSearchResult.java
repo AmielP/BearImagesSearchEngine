@@ -5,6 +5,8 @@ package webSearch.dao;
 import java.net.*;
 import java.util.*;
 import java.io.*;
+
+import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
@@ -93,6 +95,8 @@ public class BingWebSearchResult
 
 		for(int i = 0; i < jsonArray.size(); i++)
 		{
+			try
+			{
 			BingWebSearchResultVO bingWebSearchData = new BingWebSearchResultVO();
 
 			jsonObjectResult = jsonArray.get(i).getAsJsonObject();
@@ -101,10 +105,19 @@ public class BingWebSearchResult
 						System.out.println("Result " + (i + 1) + ": " + jsonObjectResult.get("contentUrl").getAsString());
 
 			bingWebSearchData.setContentID((i + 1));
+			URL imageData = new URL(jsonObjectResult.get("contentUrl").getAsString());
+			ImageIO.read(imageData);
 			bingWebSearchData.setContentUrl(jsonObjectResult.get("contentUrl").getAsString());
 			bingWebSearchData.setName(jsonObjectResult.get("name").getAsString());
 
 			headerList.add(bingWebSearchData);
+		}
+			catch (Exception e)
+			{
+				System.out.println("SKIPPING " + jsonObjectResult.get("contentUrl").getAsString() + " and placing in ILLEGAL_WEBSITE table");
+				i++;
+				continue;
+			}
 		}
 		return headerList;
 	}
