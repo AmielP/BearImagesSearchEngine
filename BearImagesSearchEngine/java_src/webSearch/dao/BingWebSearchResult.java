@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 //import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -77,7 +77,8 @@ public class BingWebSearchResult
 		SearchResults results = null;
 		try
 		{
-			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "&count=150&modules=Collections%2CRecognizedEntities%2CSimilarImages");
+			// &count=150&modules=Collections%2CRecognizedEntities%2CSimilarImages&-site:i.pinimg.com&-site:s-media-cache-ak0.pinimg.com -site:https:/c2.staticflickr.com -site:i.pinimg.com -site:s-media-cache-ak0.pinimg.com
+			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "-site:https://i.pinimg.com");
 
 			System.out.println("URL : " + url.toString());
 
@@ -347,8 +348,8 @@ public class BingWebSearchResult
 		PreparedStatement legalPreparedStatement = null;
 		PreparedStatement illegalPreparedStatement = null;
 
-		ResultSet resultSet = null;
-		PreparedStatement selectTempPreparedStatement = null;
+//		ResultSet resultSet = null;
+//		PreparedStatement selectTempPreparedStatement = null;
 
 		int total = 0;
 
