@@ -2,6 +2,7 @@ package webSearch.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public abstract class BingWebSearchResultDAO
 	protected Connection connection;
 	protected Statement statement;
 	protected PreparedStatement preparedStatement;
+	protected ResultSet resultSet;
 	protected ArrayList<Object> statementList;
 	// Delete commented stuff after implementing these in at least one of the
 	// inherited tables.
@@ -32,14 +34,15 @@ public abstract class BingWebSearchResultDAO
 	
 	//protected abstract void dropWebResultsTable() throws SQLException;
 	
-	protected void printError(String reason, SQLException e)
+	protected void printError(Class<?> className, String reason, SQLException e)
 	{
-		System.out.println("ERROR: " + reason);
+		System.out.println("ERROR: " + className.getSimpleName() + "." + reason);
 		System.out.println(e.getMessage() + "\n");
 	}
 	
 	protected void resolveSQLStatement(ArrayList<Object> statementList)
 	{
+		statementList = new ArrayList<>();
 		for (int i = 0; i < statementList.size(); i++)
 		{
 			if (statementList.get(i) != null)

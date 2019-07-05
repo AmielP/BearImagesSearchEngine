@@ -17,6 +17,7 @@ public class BingWebSearchResultVO
 	private int width;
 	private int height;
 	private String thumbnail; //has two parameters: height and width
+	private String domainUrl;
 	
 	public int getContentID()
 	{
@@ -121,6 +122,14 @@ public class BingWebSearchResultVO
 	public void setThumbnail(String thumbnail)
 	{
 		this.thumbnail = thumbnail;
+	}
+	public String getDomainUrl()
+	{
+		return domainUrl;
+	}
+	public void setDomainUrl(String domainUrl)
+	{
+		this.domainUrl = domainUrl;
 	}
 	
 	
