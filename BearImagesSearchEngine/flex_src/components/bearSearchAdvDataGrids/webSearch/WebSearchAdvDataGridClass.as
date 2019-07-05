@@ -3,6 +3,8 @@ package components.bearSearchAdvDataGrids.webSearch
 	import components.bearSearchAdvDataGrids.sharedBehaviors.SearchAdvDataGridClass;
 	import components.bearSearchAdvDataGrids.utilities.RemoteObjectWebSearch;
 	
+	import data.BingWebSearchResultVO;
+	
 	import interfaces.ISearch;
 	
 	import mx.collections.ArrayCollection;
@@ -20,7 +22,7 @@ package components.bearSearchAdvDataGrids.webSearch
 		private var iSearch:ISearch;
 		
 		[Bindable]
-		private var webSearchData:ArrayCollection;
+		private var acWebSearch:ArrayCollection;
 		
 		public function WebSearchAdvDataGridClass()
 		{
@@ -51,9 +53,20 @@ package components.bearSearchAdvDataGrids.webSearch
 
 		public function webSearch_resultHandler(event:ResultEvent, token:Object):void
 		{
-			webSearchData = new ArrayCollection();
-			webSearchData = event.result as ArrayCollection;
-			dataProvider = webSearchData;
+			acWebSearch = new ArrayCollection();
+			acWebSearch = event.result as ArrayCollection;
+			dataProvider = acWebSearch;
+			
+			for (var i:int = 0; i < 150; i++)
+			{
+				var bingWebSearchResultData:BingWebSearchResultVO = new BingWebSearchResultVO();
+				
+				bingWebSearchResultData.contentUrl = acWebSearch[i].contentUrl;
+				bingWebSearchResultData.name = acWebSearch[i].name;
+				
+				acWebSearch.addItem(bingWebSearchResultData);
+			}
+			
 			trace("Success: webSearch_resultHandler reached");
 		}
 		
