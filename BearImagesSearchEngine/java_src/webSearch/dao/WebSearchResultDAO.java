@@ -18,19 +18,19 @@ public abstract class WebSearchResultDAO
 	protected ArrayList<Object> statementList;
 	// Delete commented stuff after implementing these in at least one of the
 	// inherited tables.
-	//protected abstract void createWebResultsTable() throws SQLException;
+	// done protected abstract void createWebResultsTable() throws SQLException;
 	
 	protected abstract ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException;
 	
 	protected abstract void insertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 
-	//protected abstract void updateWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
+	// done protected abstract void updateWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 	
 	//protected abstract void insertAndUpdateWebResultsData(ArrayList<BingWebSearchResultVO webResultsList> throws SQLException;
 	
 	//protected abstract void upsertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 
-	//protected abstract void deleteWebResultsData() throws SQLException;
+	// done protected abstract void deleteWebResultsData() throws SQLException;
 	
 	//protected abstract void dropWebResultsTable() throws SQLException;
 	

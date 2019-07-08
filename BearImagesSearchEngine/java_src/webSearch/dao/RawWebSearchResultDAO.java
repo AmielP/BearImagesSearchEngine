@@ -89,6 +89,54 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		return selectWebResultsData();
 	}
 	
+	private void insertAndUpdateWebResultsData(boolean isNewDataInTable, ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
+	{
+		connection = null;
+		preparedStatement = null;
+		String insertSql = "INSERT INTO RAW_WEB_SEARCH_RESULT "
+				+ "(CONTENT_URL, "
+				+ "NAME, "
+				+ "DOMAIN_URL) "
+				+ "VALUES(?,?,?)";
+		String updateSql = "UPDATE RAW_WEB_SEARCH_RESULT "
+				+ "SET CONTENT_URL = ?, "
+				+ "NAME = ?, "
+				+ "DOMAIN_URL = ?";
+		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			
+			if (isNewDataInTable)
+			{
+				preparedStatement = connection.prepareStatement(insertSql);
+			}
+			else
+			{
+				preparedStatement = connection.prepareStatement(updateSql);
+			}
+			
+			for (int i = 0; i < webResultsList.size(); i++)
+			{
+				preparedStatement.setString(1, webResultsList.get(i).getContentUrl());
+				preparedStatement.setString(2, webResultsList.get(i).getName());
+				preparedStatement.setString(3, webResultsList.get(i).getDomainUrl());
+				
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException e)
+		{
+			printError(RawWebSearchResultDAO.class, "insertAndUpdateWebResultsData", e);
+		}
+		finally
+		{
+			statementList.add(preparedStatement);
+			resolveSQLStatement(statementList);
+		}
+	}
+	
 	private void updateWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
 	{
 		connection = null;
