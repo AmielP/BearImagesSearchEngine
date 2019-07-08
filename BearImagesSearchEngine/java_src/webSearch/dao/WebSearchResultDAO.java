@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import webSearch.vo.BingWebSearchResultVO;
 
-public abstract class BingWebSearchResultDAO
+public abstract class WebSearchResultDAO
 {
 	protected Connection connection;
 	protected Statement statement;

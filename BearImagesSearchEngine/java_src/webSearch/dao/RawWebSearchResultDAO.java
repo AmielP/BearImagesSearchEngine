@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import gateway.ConnectionHelper;
 import webSearch.vo.BingWebSearchResultVO;
 
-public class RawBingWebSearchResultDAO extends BingWebSearchResultDAO
+public class RawWebSearchResultDAO extends WebSearchResultDAO
 {	
 	@Override
 	protected ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException
@@ -41,7 +41,7 @@ public class RawBingWebSearchResultDAO extends BingWebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawBingWebSearchResultDAO.class, "selectWebResultsData", e);
+			printError(RawWebSearchResultDAO.class, "selectWebResultsData", e);
 		}
 		finally
 		{
@@ -75,7 +75,7 @@ public class RawBingWebSearchResultDAO extends BingWebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawBingWebSearchResultDAO.class, "createWebResultsTable()", e);
+			printError(RawWebSearchResultDAO.class, "createWebResultsTable()", e);
 		}
 		finally
 		{
@@ -115,7 +115,7 @@ public class RawBingWebSearchResultDAO extends BingWebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawBingWebSearchResultDAO.class, "updateWebResultsData", e);
+			printError(RawWebSearchResultDAO.class, "updateWebResultsData", e);
 		}
 		finally
 		{
@@ -139,7 +139,7 @@ public class RawBingWebSearchResultDAO extends BingWebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawBingWebSearchResultDAO.class, "deleteWebResultsData()", e);
+			printError(RawWebSearchResultDAO.class, "deleteWebResultsData()", e);
 		}
 		finally
 		{
