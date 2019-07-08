@@ -111,6 +111,39 @@ public class IllegalWebSearchResultDAO extends WebSearchResultDAO
 		}
 	}
 	
+	// If using this upsert, verify sql works
+	private void upsertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
+	{
+		connection = null;
+		preparedStatement = null;
+		String sql = "INSERT INTO ILLEGAL_WEB_SEARCH_RESULT "
+				+ "(DOMAIN_URL) "
+				+ "VALUES (?) ON CONFLICT(DOMAIN_URL) "
+				+ "DO UPDATE SET DOMAIN_URL=excluded.DOMAIN_URL";
+		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for (int i = 0; i < webResultsList.size(); i++)
+			{
+				preparedStatement.setString(1, webResultsList.get(i).getDomainUrl());
+				
+				preparedStatement.addBatch();
+			}
+			preparedStatement.executeBatch();
+		}
+		catch (SQLException e)
+		{
+			printError(IllegalWebSearchResultDAO.class, "upsertWebResultsData", e);
+		}
+		finally
+		{
+			statementList.add(preparedStatement);
+			resolveSQLStatement(statementList);
+		}
+	}
+	
 	private void deleteWebResultsData() throws SQLException
 	{
 		connection = null;

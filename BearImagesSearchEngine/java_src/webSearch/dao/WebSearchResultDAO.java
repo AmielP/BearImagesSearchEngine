@@ -16,8 +16,12 @@ public abstract class WebSearchResultDAO
 	protected PreparedStatement preparedStatement;
 	protected ResultSet resultSet;
 	protected ArrayList<Object> statementList;
+	
 	// Delete commented stuff after implementing these in at least one of the
 	// inherited tables.
+	
+	// When using inserts, updates, or upsert; change the list size to 150.
+	
 	// done protected abstract void createWebResultsTable() throws SQLException;
 	
 	protected abstract ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException;
@@ -26,7 +30,7 @@ public abstract class WebSearchResultDAO
 
 	// done protected abstract void updateWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 	
-	//protected abstract void insertAndUpdateWebResultsData(ArrayList<BingWebSearchResultVO webResultsList> throws SQLException;
+	// done protected abstract void insertAndUpdateWebResultsData(ArrayList<BingWebSearchResultVO webResultsList> throws SQLException;
 	
 	//protected abstract void upsertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 
