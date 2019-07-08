@@ -1,15 +1,14 @@
 package webSearch.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import gateway.ConnectionHelper;
 import webSearch.vo.BingWebSearchResultVO;
 
-public class RawWebSearchResultDAO extends WebSearchResultDAO
-{	
+public class FilteredWebSearchResultDAO extends WebSearchResultDAO
+{
+
 	@Override
 	protected ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException
 	{
@@ -19,9 +18,8 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		preparedStatement = null;
 		resultSet = null;
 		String sql = "SELECT CONTENT_URL, "
-				+ "NAME, "
-				+ "DOMAIN_URL "
-				+ "FROM RAW_WEB_SEARCH_RESULT";
+				+ "NAME "
+				+ "FROM FILTERED_WEB_SEARCH_RESULT";
 		
 		try
 		{
@@ -34,28 +32,27 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 				
 				data.setContentUrl(resultSet.getString(1));
 				data.setName(resultSet.getString(2));
-				data.setDomainUrl(resultSet.getString(3));
 				
 				list.add(data);
 			}
 		}
 		catch (SQLException e)
 		{
-			printError(RawWebSearchResultDAO.class, "selectWebResultsData", e);
+			printError(FilteredWebSearchResultDAO.class, "selectWebResultsData", e);
 		}
 		finally
 		{
 			statementList.add(preparedStatement);
 			resolveSQLStatement(statementList);
 		}
-		return list;
+		return null;
 	}
 
 	@Override
 	protected void insertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 	
 	private void createWebResultsTable() throws SQLException
@@ -63,10 +60,9 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		connection = null;
 		statement = null;
 		String sql = "CREATE TABLE IF NOT EXISTS "
-				+ "RAW_WEB_SEARCH_RESULT "
+				+ "FILTERED_WEB_SEARCH_RESULT "
 				+ "(CONTENT_URL TEXT CONSTRAINT CONTENT_URL_UNIQUE UNIQUE ON CONFLICT REPLACE, "
-				+ "NAME TEXT, "
-				+ "DOMAIN_URL TEXT)";
+				+ "NAME TEXT)";
 		
 		try
 		{
@@ -75,7 +71,7 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawWebSearchResultDAO.class, "createWebResultsTable", e);
+			printError(FilteredWebSearchResultDAO.class, "createWebResultsTable", e);
 		}
 		finally
 		{
@@ -93,10 +89,9 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 	{
 		connection = null;
 		preparedStatement = null;
-		String sql = "UPDATE RAW_WEB_SEARCH_RESULT "
+		String sql = "UPDATE FILTERED_WEB_SEARCH_RESULT "
 				+ "SET CONTENT_URL = ?, "
-				+ "NAME = ?, "
-				+ "DOMAIN_URL = ?";
+				+ "NAME = ?";
 		
 		try
 		{
@@ -107,7 +102,6 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 			{
 				preparedStatement.setString(1, webResultsList.get(i).getContentUrl());
 				preparedStatement.setString(2, webResultsList.get(i).getName());
-				preparedStatement.setString(3, webResultsList.get(i).getDomainUrl());
 				
 				preparedStatement.addBatch();
 			}
@@ -115,7 +109,7 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawWebSearchResultDAO.class, "updateWebResultsData", e);
+			printError(FilteredWebSearchResultDAO.class, "updateWebResultsData", e);
 		}
 		finally
 		{
@@ -128,7 +122,7 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 	{
 		connection = null;
 		preparedStatement = null;
-		String sql = "DELETE FROM RAW_WEB_SEARCH_RESULT";
+		String sql = "DELETE FROM FILTERED_WEB_SEARCH_RESULT";
 		
 		try
 		{
@@ -139,7 +133,7 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(RawWebSearchResultDAO.class, "deleteWebResultsData", e);
+			printError(FilteredWebSearchResultDAO.class, "deleteWebResultsData", e);
 		}
 		finally
 		{

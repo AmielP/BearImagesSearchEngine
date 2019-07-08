@@ -35,7 +35,7 @@ public class IllegalWebSearchResultDAO extends WebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(IllegalWebSearchResultDAO.class, "selectWebResultsData()", e);
+			printError(IllegalWebSearchResultDAO.class, "selectWebResultsData", e);
 		}
 		finally
 		{
@@ -66,7 +66,7 @@ public class IllegalWebSearchResultDAO extends WebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(IllegalWebSearchResultDAO.class, "createWebResultsTable()", e);
+			printError(IllegalWebSearchResultDAO.class, "createWebResultsTable", e);
 		}
 		finally
 		{
@@ -126,7 +126,7 @@ public class IllegalWebSearchResultDAO extends WebSearchResultDAO
 		}
 		catch (SQLException e)
 		{
-			printError(IllegalWebSearchResultDAO.class, "deleteWebResultsData()", e);
+			printError(IllegalWebSearchResultDAO.class, "deleteWebResultsData", e);
 		}
 		finally
 		{
