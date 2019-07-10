@@ -61,8 +61,8 @@ package components.bearSearchAdvDataGrids.webSearch
 			{
 				var bingWebSearchResultData:BingWebSearchResultVO = new BingWebSearchResultVO();
 				
-				bingWebSearchResultData.contentUrl = acWebSearch[i].contentUrl;
 				bingWebSearchResultData.name = acWebSearch[i].name;
+				bingWebSearchResultData.contentUrl = acWebSearch[i].contentUrl;
 				
 				acWebSearch.addItem(bingWebSearchResultData);
 			}

@@ -100,9 +100,9 @@ public class BingWebSearchResult
 			// Print each of the URL results
 						System.out.println("Result " + (i + 1) + ": " + jsonObjectResult.get("contentUrl").getAsString());
 
-			bingWebSearchData.setContentID((i + 1));
-			bingWebSearchData.setContentUrl(jsonObjectResult.get("contentUrl").getAsString());
+//			bingWebSearchData.setContentID((i + 1));
 			bingWebSearchData.setName(jsonObjectResult.get("name").getAsString());
+			bingWebSearchData.setContentUrl(jsonObjectResult.get("contentUrl").getAsString());
 
 			headerList.add(bingWebSearchData);
 		}

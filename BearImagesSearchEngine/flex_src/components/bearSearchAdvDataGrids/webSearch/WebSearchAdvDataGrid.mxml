@@ -11,7 +11,8 @@
 	</fx:Declarations>
 	
 	<custom:groupedColumns>
-		<mx:AdvancedDataGridColumn dataField="contentID" headerText="ID" width="100" editable="false"/>
+		<!--<mx:AdvancedDataGridColumn dataField="contentID" headerText="ID" width="100" editable="false"/>-->
+		<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" editable="true"/>
 		<mx:AdvancedDataGridColumn dataField="contentUrl" headerText="Bear Image" width="900" editable="false">
 			<mx:itemRenderer>
 				<fx:Component>
@@ -21,7 +22,8 @@
 				</fx:Component>
 			</mx:itemRenderer>
 		</mx:AdvancedDataGridColumn>
-		<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" editable="true"/>
+		<mx:AdvancedDataGridColumn dataField="contentUrl" headerText="Content URL" width="200" editable="true"/>
+		<!--<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" editable="true"/>-->
 	</custom:groupedColumns>
 </custom:WebSearchAdvDataGridClass>
 <!--width="585" height="441"Goes inside the top tag-->
