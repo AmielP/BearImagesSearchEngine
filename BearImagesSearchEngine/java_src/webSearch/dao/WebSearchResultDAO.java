@@ -32,11 +32,11 @@ public abstract class WebSearchResultDAO
 	
 	// done protected abstract void insertAndUpdateWebResultsData(ArrayList<BingWebSearchResultVO webResultsList> throws SQLException;
 	
-	//protected abstract void upsertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
+	// done protected abstract void upsertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 
 	// done protected abstract void deleteWebResultsData() throws SQLException;
 	
-	//protected abstract void dropWebResultsTable() throws SQLException;
+	// done protected abstract void dropWebResultsTable() throws SQLException;
 	
 	protected void printError(Class<?> className, String reason, SQLException e)
 	{

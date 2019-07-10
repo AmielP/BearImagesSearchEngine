@@ -141,4 +141,28 @@ public class FilteredWebSearchResultDAO extends WebSearchResultDAO
 			resolveSQLStatement(statementList);
 		}
 	}
+	
+	private void dropWebResultsTable() throws SQLException
+	{
+		connection = null;
+		preparedStatement = null;
+		String sql = "DROP TABLE IF EXISTS FILTERED_WEB_SEARCH_RESULT";
+		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			printError(FilteredWebSearchResultDAO.class, "dropWebResultsTable()", e);
+		}
+		finally
+		{
+			statementList.add(preparedStatement);
+			resolveSQLStatement(statementList);
+		}
+	}
 }
