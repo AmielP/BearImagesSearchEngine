@@ -51,22 +51,23 @@ package components.bearSearchAdvDataGrids.webSearch
 			token.addResponder(responder);
 		}
 
+		// Don't need for loop since results come back in through the dataProvider from the filtered table
 		public function webSearch_resultHandler(event:ResultEvent, token:Object):void
 		{
 			acWebSearch = new ArrayCollection();
 			acWebSearch = event.result as ArrayCollection;
+			
+			
+//			for (var i:int = 0; i < 50; i++)
+//			{
+//				var bingWebSearchResultData:BingWebSearchResultVO = new BingWebSearchResultVO();
+//				
+//				bingWebSearchResultData.name = acWebSearch[i].name;
+//				bingWebSearchResultData.contentUrl = acWebSearch[i].contentUrl;
+//				
+//				acWebSearch.addItem(bingWebSearchResultData);
+//			}
 			dataProvider = acWebSearch;
-			
-			for (var i:int = 0; i < 150; i++)
-			{
-				var bingWebSearchResultData:BingWebSearchResultVO = new BingWebSearchResultVO();
-				
-				bingWebSearchResultData.name = acWebSearch[i].name;
-				bingWebSearchResultData.contentUrl = acWebSearch[i].contentUrl;
-				
-				acWebSearch.addItem(bingWebSearchResultData);
-			}
-			
 			trace("Success: webSearch_resultHandler reached");
 		}
 		

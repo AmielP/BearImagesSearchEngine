@@ -26,7 +26,9 @@ public abstract class WebSearchResultDAO
 	
 	protected abstract ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException;
 	
-	protected abstract void insertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
+	// Must add a count iterator in order that the web results are inserted in the corresponding row
+	// within the length of the jsonArray.
+	protected abstract void insertWebResultsData(int jsonArrayIndex, ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 
 	// done protected abstract void updateWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException;
 	
@@ -46,14 +48,15 @@ public abstract class WebSearchResultDAO
 	
 	protected void resolveSQLStatement(ArrayList<Object> statementList)
 	{
-		statementList = new ArrayList<>();
+//		statementList = new ArrayList<>();
 		for (int i = 0; i < statementList.size(); i++)
 		{
 			if (statementList.get(i) != null)
 			{
 				try
 				{
-					((Connection) statementList.get(i)).close();
+					// If using Statement, then need to accommodate for Statement class object
+					((PreparedStatement) statementList.get(i)).close();
 				}
 				catch (SQLException ignore) {}
 				}

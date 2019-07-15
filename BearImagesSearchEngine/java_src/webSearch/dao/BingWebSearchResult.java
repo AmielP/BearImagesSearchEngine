@@ -3,8 +3,11 @@ package webSearch.dao;
 //Courtesy of https://github.com/Azure-Samples/cognitive-services-REST-api-samples/blob/master/java/Search/BingImageSearchv7Quickstart.java
 
 import java.net.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.io.*;
+
+import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
@@ -13,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import webSearch.interfaces.IDelete;
 import webSearch.vo.BingWebSearchResultVO;
 
 public class BingWebSearchResult
@@ -31,6 +35,8 @@ public class BingWebSearchResult
 	private JsonArray jsonArray;
 
 	private JsonObject jsonObjectResult;
+	
+	private WebSearchResultDAO filteredWebSearchResultDAO;
 
 	private JsonObject convertJsonTextToJsonObject(String json_text)
 	{
@@ -52,7 +58,7 @@ public class BingWebSearchResult
 		SearchResults results = null;
 		try
 		{
-			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "&count=150&modules=Collections%2CRecognizedEntities%2CSimilarImages");
+			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "&count=50&modules=Collections%2CRecognizedEntities%2CSimilarImages");
 
 			System.out.println("URL : " + url.toString());
 
@@ -85,32 +91,87 @@ public class BingWebSearchResult
 		return results;
 	}
 
-	private ArrayList<BingWebSearchResultVO> readBingWebSearchData(JsonObject json)
+	// No longer needs to return an array list of BingWebSearchResultVOs. 
+	// Back end database does all of the heavy lifting for the web results
+	// in filtering bad websites, storing all, raw websites, and reading the good websites
+	// based on domain matches on bad websites from bad and raw table.
+	private /*ArrayList<BingWebSearchResultVO>*/void readBingWebSearchData(JsonObject json) throws SQLException
 	{
+		URL contentUrl = null; 
+		String domainUrl = null; 
+		String stringContentUrl = null;
+		BingWebSearchResultVO bingWebSearchData = null;
+		
+		IDelete deleteRawWebSearchResultDAO = new RawWebSearchResultDAO();
+		IDelete deleteFilteredWebSearchResultDAO = new FilteredWebSearchResultDAO();
+		WebSearchResultDAO rawWebSearchResultDAO = new RawWebSearchResultDAO();
+		WebSearchResultDAO illegalWebSearchResultDAO = new IllegalWebSearchResultDAO();
+		filteredWebSearchResultDAO = new FilteredWebSearchResultDAO();
 		ArrayList<BingWebSearchResultVO> headerList = new ArrayList<BingWebSearchResultVO>();
 
 		jsonArray = json.getAsJsonArray("value");
-
+		
+		deleteRawWebSearchResultDAO.deleteWebResultsData();
+		deleteFilteredWebSearchResultDAO.deleteWebResultsData();
+		// Limit size of search query to 50 in the search query string at the top of this class
+		// for brevity sake.
 		for(int i = 0; i < jsonArray.size(); i++)
 		{
-			BingWebSearchResultVO bingWebSearchData = new BingWebSearchResultVO();
+			try
+			{
+				bingWebSearchData = new BingWebSearchResultVO();
 
-			jsonObjectResult = jsonArray.get(i).getAsJsonObject();
+				jsonObjectResult = jsonArray.get(i).getAsJsonObject();
+				stringContentUrl = jsonObjectResult.get("contentUrl").getAsString();
+				contentUrl = new URL(stringContentUrl);
+				domainUrl = contentUrl.getHost();
+				ImageIO.read(contentUrl);
 
-			// Print each of the URL results
-						System.out.println("Result " + (i + 1) + ": " + jsonObjectResult.get("contentUrl").getAsString());
+				// Print each of the URL results
+				System.out.println((i + 1) + ". Adding to RawWebSearchResult: " + jsonObjectResult.get("contentUrl").getAsString());
 
-//			bingWebSearchData.setContentID((i + 1));
-			bingWebSearchData.setName(jsonObjectResult.get("name").getAsString());
-			bingWebSearchData.setContentUrl(jsonObjectResult.get("contentUrl").getAsString());
+				//			bingWebSearchData.setContentID((i + 1));
+				bingWebSearchData.setName(jsonObjectResult.get("name").getAsString());
+				bingWebSearchData.setContentUrl(jsonObjectResult.get("contentUrl").getAsString());
+				bingWebSearchData.setDomainUrl(domainUrl);
 
-			headerList.add(bingWebSearchData);
+				headerList.add(bingWebSearchData);
+				rawWebSearchResultDAO.insertWebResultsData(i, headerList);
+			}
+			catch (MalformedURLException e)
+			{
+				e.printStackTrace();
+			} 
+			catch (IOException e)
+			{
+				bingWebSearchData = new BingWebSearchResultVO();
+				bingWebSearchData.setDomainUrl(domainUrl);
+				
+				headerList.add(bingWebSearchData);
+				
+				illegalWebSearchResultDAO.insertWebResultsData(i, headerList);
+				System.out.println("IOException " + (i + 1) + ". Adding to IllegalWebSearchResult: " + headerList.get(i).getDomainUrl());
+				continue;
+			}
+			catch (Exception e)
+			{
+				System.out.println("General Exception");
+				bingWebSearchData = new BingWebSearchResultVO();
+				bingWebSearchData.setDomainUrl(domainUrl);
+				
+				headerList.add(bingWebSearchData);
+				illegalWebSearchResultDAO.insertWebResultsData(i, headerList);
+
+				continue;
+			}
 		}
-		return headerList;
+		filteredWebSearchResultDAO.insertWebResultsData(0, headerList);
 	}
 
 	public ArrayList<BingWebSearchResultVO> initiateWebSearch(String searchTerm) throws Exception
 	{
+		filteredWebSearchResultDAO = new FilteredWebSearchResultDAO();
+		
 		this.searchTerm = searchTerm;
 		SearchResults result = null;
 
@@ -166,7 +227,8 @@ public class BingWebSearchResult
 		{
 		}
 		numberOfTimesUserSearched++;
-		return readBingWebSearchData(json);
+		readBingWebSearchData(json);
+		return filteredWebSearchResultDAO.selectWebResultsData();
 	}
 }
 

@@ -6,9 +6,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import gateway.ConnectionHelper;
+import webSearch.interfaces.IDelete;
 import webSearch.vo.BingWebSearchResultVO;
 
-public class RawWebSearchResultDAO extends WebSearchResultDAO
+public class RawWebSearchResultDAO extends WebSearchResultDAO implements IDelete
 {	
 	@Override
 	protected ArrayList<BingWebSearchResultVO> selectWebResultsData() throws SQLException
@@ -52,10 +53,34 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 	}
 
 	@Override
-	protected void insertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
+	protected void insertWebResultsData(int i, ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
 	{
-		// TODO Auto-generated method stub
+		connection = null;
+		preparedStatement = null;
+		String sql = "INSERT INTO RAW_WEB_SEARCH_RESULT (NAME, CONTENT_URL, DOMAIN_URL) VALUES (?,?,?)";
+//		String sqlTest = "INSERT INTO RAW_WEB_SEARCH_RESULT SELECT ?,?,? FROM RAW_WEB_SEARCH_RESULT WHERE NOT EXISTS (SELECT DOMAIN_URL FROM ILLEGAL_WEB_SEARCH_RESULT WHERE RAW_WEB_SEARCH_RESULT.DOMAIN_URL=ILLEGAL_WEB_SEARCH_RESULT.DOMAIN_URL)";
 		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setString(1, webResultsList.get(i).getName());
+			preparedStatement.setString(2, webResultsList.get(i).getContentUrl());
+			preparedStatement.setString(3, webResultsList.get(i).getDomainUrl());
+			
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			printError(RawWebSearchResultDAO.class, "insertWebResultsData", e);
+		}
+		finally
+		{
+			statementList = new ArrayList<>();
+			statementList.add(preparedStatement);
+			resolveSQLStatement(statementList);
+		}
 	}
 	
 	private void createWebResultsTable() throws SQLException
@@ -172,7 +197,8 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		}
 	}
 	
-	private void deleteWebResultsData() throws SQLException
+	@Override
+	public void deleteWebResultsData() throws SQLException
 	{
 		connection = null;
 		preparedStatement = null;
@@ -191,6 +217,7 @@ public class RawWebSearchResultDAO extends WebSearchResultDAO
 		}
 		finally
 		{
+			statementList = new ArrayList<>();
 			statementList.add(preparedStatement);
 			resolveSQLStatement(statementList);
 		}

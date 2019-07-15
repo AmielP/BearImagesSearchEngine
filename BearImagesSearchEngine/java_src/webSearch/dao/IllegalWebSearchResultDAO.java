@@ -46,9 +46,30 @@ public class IllegalWebSearchResultDAO extends WebSearchResultDAO
 	}
 
 	@Override
-	protected void insertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
+	protected void insertWebResultsData(int i, ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
 	{
+		connection = null;
+		preparedStatement = null;
+		String sql = "INSERT INTO ILLEGAL_WEB_SEARCH_RESULT (DOMAIN_URL) VALUES (?)";
+		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
 
+			preparedStatement.setString(1, webResultsList.get(i).getDomainUrl());
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			printError(IllegalWebSearchResultDAO.class, "insertWebResultsData", e);
+		}
+		finally
+		{
+			statementList = new ArrayList<>();
+			statementList.add(preparedStatement);
+			resolveSQLStatement(statementList);
+		}
 	}
 	
 	private void createWebResultsTable() throws SQLException

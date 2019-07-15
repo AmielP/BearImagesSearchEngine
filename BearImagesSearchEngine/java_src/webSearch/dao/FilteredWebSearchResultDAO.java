@@ -1,12 +1,14 @@
 package webSearch.dao;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import gateway.ConnectionHelper;
+import webSearch.interfaces.IDelete;
 import webSearch.vo.BingWebSearchResultVO;
 
-public class FilteredWebSearchResultDAO extends WebSearchResultDAO
+public class FilteredWebSearchResultDAO extends WebSearchResultDAO implements IDelete
 {
 
 	@Override
@@ -17,8 +19,8 @@ public class FilteredWebSearchResultDAO extends WebSearchResultDAO
 		connection = null;
 		preparedStatement = null;
 		resultSet = null;
-		String sql = "SELECT CONTENT_URL, "
-				+ "NAME "
+		String sql = "SELECT NAME, "
+				+ "CONTENT_URL "
 				+ "FROM FILTERED_WEB_SEARCH_RESULT";
 		
 		try
@@ -30,8 +32,9 @@ public class FilteredWebSearchResultDAO extends WebSearchResultDAO
 			{
 				BingWebSearchResultVO data = new BingWebSearchResultVO();
 				
-				data.setContentUrl(resultSet.getString(1));
-				data.setName(resultSet.getString(2));
+				data.setName(resultSet.getString(1));
+				data.setContentUrl(resultSet.getString(2));
+//				data.setContentUrl(resultSet.getString(2));
 				
 				list.add(data);
 			}
@@ -42,17 +45,47 @@ public class FilteredWebSearchResultDAO extends WebSearchResultDAO
 		}
 		finally
 		{
+			statementList = new ArrayList<>();
 			statementList.add(preparedStatement);
 			resolveSQLStatement(statementList);
 		}
-		return null;
+		return list;
 	}
 
 	@Override
-	protected void insertWebResultsData(ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
+	protected void insertWebResultsData(int i, ArrayList<BingWebSearchResultVO> webResultsList) throws SQLException
 	{
-		// TODO Auto-generated method stub
-
+		connection = null;
+		preparedStatement = null;
+		String sql = "INSERT INTO FILTERED_WEB_SEARCH_RESULT "
+				+ "(NAME, CONTENT_URL) "
+				+ "SELECT NAME, "
+				+ "CONTENT_URL "
+				+ "FROM RAW_WEB_SEARCH_RESULT "
+				+ "as rwsr "
+				+ "WHERE NOT EXISTS "
+				+ "(SELECT DOMAIN_URL "
+				+ "FROM ILLEGAL_WEB_SEARCH_RESULT "
+				+ "as iwsr "
+				+ "WHERE rwsr.DOMAIN_URL = iwsr.DOMAIN_URL)";
+		
+		try
+		{
+			connection = ConnectionHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.executeUpdate();
+		}
+		catch (SQLException e)
+		{
+			printError(FilteredWebSearchResultDAO.class, "insertWebResultsData", e);
+		}
+		finally
+		{
+			statementList = new ArrayList<>();
+			statementList.add(preparedStatement);
+			resolveSQLStatement(statementList);
+		}
 	}
 	
 	private void createWebResultsTable() throws SQLException
@@ -118,7 +151,8 @@ public class FilteredWebSearchResultDAO extends WebSearchResultDAO
 		}
 	}
 	
-	private void deleteWebResultsData() throws SQLException
+	@Override
+	public void deleteWebResultsData() throws SQLException
 	{
 		connection = null;
 		preparedStatement = null;
@@ -137,6 +171,7 @@ public class FilteredWebSearchResultDAO extends WebSearchResultDAO
 		}
 		finally
 		{
+			statementList = new ArrayList<>();
 			statementList.add(preparedStatement);
 			resolveSQLStatement(statementList);
 		}
