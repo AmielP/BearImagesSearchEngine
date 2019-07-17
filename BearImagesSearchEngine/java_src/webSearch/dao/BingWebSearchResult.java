@@ -37,6 +37,7 @@ public class BingWebSearchResult
 	private JsonObject jsonObjectResult;
 	
 	private WebSearchResultDAO filteredWebSearchResultDAO;
+	private WebSearchResultDAO illegalWebSearchResultDAO;
 
 	private JsonObject convertJsonTextToJsonObject(String json_text)
 	{
@@ -90,6 +91,17 @@ public class BingWebSearchResult
 
 		return results;
 	}
+	
+	private void insertIllegalWebResults(String reason, int i, BingWebSearchResultVO bingWebSearchData, String domainUrl, ArrayList<BingWebSearchResultVO> headerList) throws SQLException
+	{
+		bingWebSearchData = new BingWebSearchResultVO();
+		bingWebSearchData.setDomainUrl(domainUrl);
+		
+		headerList.add(bingWebSearchData);
+		
+		illegalWebSearchResultDAO.insertWebResultsData(i, headerList);
+		System.out.println(reason + " " + (i + 1) + ". Adding to IllegalWebSearchResult: " + headerList.get(i).getDomainUrl());
+	}
 
 	// No longer needs to return an array list of BingWebSearchResultVOs. 
 	// Back end database does all of the heavy lifting for the web results
@@ -97,36 +109,59 @@ public class BingWebSearchResult
 	// based on domain matches on bad websites from bad and raw table.
 	private /*ArrayList<BingWebSearchResultVO>*/void readBingWebSearchData(JsonObject json) throws SQLException
 	{
+		boolean isBreak = false;
 		URL contentUrl = null; 
 		String domainUrl = null; 
 		String stringContentUrl = null;
 		BingWebSearchResultVO bingWebSearchData = null;
+//		BingWebSearchResultVO illegalData = null;
+		String contentUrlToStringDomain = null;
 		
 		IDelete deleteRawWebSearchResultDAO = new RawWebSearchResultDAO();
 		IDelete deleteFilteredWebSearchResultDAO = new FilteredWebSearchResultDAO();
 		WebSearchResultDAO rawWebSearchResultDAO = new RawWebSearchResultDAO();
-		WebSearchResultDAO illegalWebSearchResultDAO = new IllegalWebSearchResultDAO();
+		illegalWebSearchResultDAO = new IllegalWebSearchResultDAO();
 		filteredWebSearchResultDAO = new FilteredWebSearchResultDAO();
 		ArrayList<BingWebSearchResultVO> headerList = new ArrayList<BingWebSearchResultVO>();
-
-		jsonArray = json.getAsJsonArray("value");
+		ArrayList<BingWebSearchResultVO> illegalList = illegalWebSearchResultDAO.selectWebResultsData();
 		
+		jsonArray = json.getAsJsonArray("value");
+				
 		deleteRawWebSearchResultDAO.deleteWebResultsData();
 		deleteFilteredWebSearchResultDAO.deleteWebResultsData();
+		
 		// Limit size of search query to 50 in the search query string at the top of this class
 		// for brevity sake.
 		for(int i = 0; i < jsonArray.size(); i++)
 		{
 			try
 			{
+				isBreak = false;
 				bingWebSearchData = new BingWebSearchResultVO();
 
 				jsonObjectResult = jsonArray.get(i).getAsJsonObject();
 				stringContentUrl = jsonObjectResult.get("contentUrl").getAsString();
 				contentUrl = new URL(stringContentUrl);
 				domainUrl = contentUrl.getHost();
+				contentUrlToStringDomain = domainUrl.toString();
+				
+				for (BingWebSearchResultVO illegalData : illegalList)
+				{
+					if (contentUrlToStringDomain.equalsIgnoreCase(illegalData.getDomainUrl()))
+					{
+						isBreak = true;
+						break;
+					}
+				}
+				
+				if (isBreak)
+				{
+					insertIllegalWebResults("isBreak", i, bingWebSearchData, domainUrl, headerList);
+					continue;
+				}
+				
 				ImageIO.read(contentUrl);
-
+					
 				// Print each of the URL results
 				System.out.println((i + 1) + ". Adding to RawWebSearchResult: " + jsonObjectResult.get("contentUrl").getAsString());
 
@@ -144,24 +179,12 @@ public class BingWebSearchResult
 			} 
 			catch (IOException e)
 			{
-				bingWebSearchData = new BingWebSearchResultVO();
-				bingWebSearchData.setDomainUrl(domainUrl);
-				
-				headerList.add(bingWebSearchData);
-				
-				illegalWebSearchResultDAO.insertWebResultsData(i, headerList);
-				System.out.println("IOException " + (i + 1) + ". Adding to IllegalWebSearchResult: " + headerList.get(i).getDomainUrl());
+				insertIllegalWebResults("IOException", i, bingWebSearchData, domainUrl, headerList);
 				continue;
 			}
 			catch (Exception e)
 			{
-				System.out.println("General Exception");
-				bingWebSearchData = new BingWebSearchResultVO();
-				bingWebSearchData.setDomainUrl(domainUrl);
-				
-				headerList.add(bingWebSearchData);
-				illegalWebSearchResultDAO.insertWebResultsData(i, headerList);
-
+				insertIllegalWebResults("Exception", i, bingWebSearchData, domainUrl, headerList);
 				continue;
 			}
 		}

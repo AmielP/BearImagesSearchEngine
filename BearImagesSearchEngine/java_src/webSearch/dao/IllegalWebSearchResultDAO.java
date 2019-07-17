@@ -39,6 +39,7 @@ public class IllegalWebSearchResultDAO extends WebSearchResultDAO
 		}
 		finally
 		{
+			statementList = new ArrayList<>();
 			statementList.add(preparedStatement);
 			resolveSQLStatement(statementList);
 		}
