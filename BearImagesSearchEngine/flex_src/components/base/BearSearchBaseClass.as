@@ -62,6 +62,8 @@ package components.base
 			tiSearch.addEventListener(FlexEvent.ENTER, tiSearch_enterHandler);
 			
 			bPreviousState.addEventListener(MouseEvent.CLICK, bpreviousState_clickHandler);
+			
+			adgWebSearch.addEventListener(ResultEvent.RESULT, webSearch_resultHandler);
 		}
 		
 		private function controlQHandler(event:KeyboardEvent):void
@@ -83,5 +85,10 @@ package components.base
 		}
 		
 		private function bpreviousState_clickHandler(event:MouseEvent):void{};
+		
+		private function webSearch_resultHandler(event:ResultEvent):void
+		{
+			adgAdvancedSearch.search(tiSearch.text);
+		}
 	}
 }

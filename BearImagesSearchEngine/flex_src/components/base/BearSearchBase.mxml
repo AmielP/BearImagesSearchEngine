@@ -46,7 +46,7 @@
 		</s:Panel>
 		<s:Panel visible="false" id="pAdvancedSearchResults" title="Advanced Search Results" left="604" right="10" top="103" bottom="93">
 			<s:controlBarContent>
-				<s:Label text="Bear images search results using computer vision AI"/>
+				<s:Label text="Bear images search results using image processing AI"/>
 			</s:controlBarContent>
 			<advancedSearchResults:AdvancedSearchAdvDataGrid id="adgAdvancedSearch"/>
 		</s:Panel>

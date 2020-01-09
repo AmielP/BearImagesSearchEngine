@@ -59,7 +59,9 @@ public class BingWebSearchResult
 		SearchResults results = null;
 		try
 		{
-			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "&count=50&modules=Collections%2CRecognizedEntities%2CSimilarImages");
+			// Commented URL captures similar images and is not raw data from text-based search
+//			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "&count=50&modules=Collections%2CRecognizedEntities%2CSimilarImages");
+			URL url = new URL(host + path + "?q=" + URLEncoder.encode(searchQuery, "UTF-8") + "&count=50");
 
 			System.out.println("URL : " + url.toString());
 
@@ -191,7 +193,7 @@ public class BingWebSearchResult
 		filteredWebSearchResultDAO.insertWebResultsData(0, headerList);
 	}
 
-	public ArrayList<BingWebSearchResultVO> initiateWebSearch(String searchTerm) throws Exception
+	public ArrayList<BingWebSearchResultVO> initiateWebSearch(String searchTerm, boolean isWebSearch) throws Exception
 	{
 		filteredWebSearchResultDAO = new FilteredWebSearchResultDAO();
 		
@@ -208,10 +210,21 @@ public class BingWebSearchResult
 		{
 			System.out.println("---------------------------------------------------------------");
 			System.out.println("Number of searches the user made: " + (numberOfTimesUserSearched + 1));
-			System.out.println("Searching the web for: " + bearSearchTerm + "\"" + searchTerm + "\"");
-
-			result = searchImages(bearSearchTerm + "\"" + searchTerm + "\"");
-
+			// printing searches from bearSearchTerm which is not raw data and not accurate 
+//			System.out.println("Searching the web for: " + bearSearchTerm + "\"" + searchTerm + "\"");
+			System.out.println("Searching the web for: " + searchTerm);
+			
+			if(isWebSearch)
+			{
+				// Former search result. If not needed, delete
+//				result = searchImages(bearSearchTerm + "\"" + searchTerm + "\"");
+				result = searchImages(searchTerm);
+			}
+			else
+			{
+				result = searchImages(searchTerm);
+			}
+				
 			System.out.println("\nRelevant HTTP Headers:\n");
 			for(String header : result.getRelevantHeaders().keySet())
 			{

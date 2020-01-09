@@ -22,7 +22,7 @@
 				</fx:Component>
 			</mx:itemRenderer>
 		</mx:AdvancedDataGridColumn>
-		<mx:AdvancedDataGridColumn dataField="contentUrl" headerText="Content URL" width="200" editable="true"/>
+		<mx:AdvancedDataGridColumn dataField="contentUrl" headerText="URL" width="200" editable="true"/>
 		<!--<mx:AdvancedDataGridColumn dataField="name" headerText="Description" width="200" editable="true"/>-->
 	</custom:groupedColumns>
 </custom:WebSearchAdvDataGridClass>

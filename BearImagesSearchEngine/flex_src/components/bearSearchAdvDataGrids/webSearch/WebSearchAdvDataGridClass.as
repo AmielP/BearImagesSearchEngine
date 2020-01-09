@@ -35,24 +35,24 @@ package components.bearSearchAdvDataGrids.webSearch
 		// Make this an abstract method from a parent search class
 		public function search(webSearchQuery:String):void
 		{
-			webSearch(webSearchQuery);
+			webSearch(webSearchQuery, true);
 		}
 		
 		// Make these following methods private in a parent search class and only allow the abstract method to access these private methods in order to encapsuiate their behavior
-		private function webSearch(webSearchQuery:String):void
+		private function webSearch(webSearchQuery:String, isWebSearch:Boolean):void
 		{
 //			if (!StringUtil.trim(webSearchQuery))
 //			{
 //				webSearchQuery = "bear";
 //			}
 			trace("Remote object in WebSearchAdvDataGrid class: " + iSearch.remoteObject);
-			var token:AsyncToken = iSearch.remoteObject.initiateWebSearch(webSearchQuery);
+			var token:AsyncToken = iSearch.remoteObject.initiateWebSearch(webSearchQuery, isWebSearch);
 			var responder:AsyncResponder = new AsyncResponder(webSearch_resultHandler, webSearch_faultHandler, token);
 			token.addResponder(responder);
 		}
 
 		// Don't need for loop since results come back in through the dataProvider from the filtered table
-		public function webSearch_resultHandler(event:ResultEvent, token:Object):void
+		private function webSearch_resultHandler(event:ResultEvent, token:Object):void
 		{
 			acWebSearch = new ArrayCollection();
 			acWebSearch = event.result as ArrayCollection;
@@ -68,10 +68,11 @@ package components.bearSearchAdvDataGrids.webSearch
 //				acWebSearch.addItem(bingWebSearchResultData);
 //			}
 			dataProvider = acWebSearch;
+			this.dispatchEvent(event);
 			trace("Success: webSearch_resultHandler reached");
 		}
 		
-		public function webSearch_faultHandler(event:FaultEvent, token:Object):void
+		private function webSearch_faultHandler(event:FaultEvent, token:Object):void
 		{
 			trace("webSearch_faultHandler: " + event);
 			Alert.show("Failure: " + event, "webSearch_faultHandler", 4, this);
