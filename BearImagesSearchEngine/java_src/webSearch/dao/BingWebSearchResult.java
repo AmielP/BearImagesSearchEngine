@@ -212,6 +212,10 @@ public class BingWebSearchResult
 			System.out.println("Number of searches the user made: " + (numberOfTimesUserSearched + 1));
 			// printing searches from bearSearchTerm which is not raw data and not accurate 
 //			System.out.println("Searching the web for: " + bearSearchTerm + "\"" + searchTerm + "\"");
+			
+			if(searchTerm.equals(""))
+				searchTerm = "bear";
+			
 			System.out.println("Searching the web for: " + searchTerm);
 			
 			if(isWebSearch)

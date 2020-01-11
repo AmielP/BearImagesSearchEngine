@@ -4,7 +4,7 @@
 									   xmlns:mx="library://ns.adobe.com/flex/mx"
 									   xmlns:custom="components.bearSearchAdvDataGrids.advancedSearch.*"
 									   designViewDataType="flat" rowHeight="200" height="100%" width="100%"
-									   allowMultipleSelection="true"
+									   allowMultipleSelection="true" fontFamily="Verdana"
 									   wordWrap="true" editable="true" resizableColumns="false">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->

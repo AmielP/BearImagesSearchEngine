@@ -1,25 +1,17 @@
 package components.base
 {
-	import components.bearSearchAdvDataGrids.advancedSearch.AdvancedSearchAdvDataGrid;
-	import components.bearSearchAdvDataGrids.utilities.RemoteObjectSearch;
-	import components.bearSearchAdvDataGrids.utilities.RemoteObjectWebSearch;
-	import components.bearSearchAdvDataGrids.webSearch.WebSearchAdvDataGrid;
-	
 	import flash.desktop.NativeApplication;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
 	
-	import interfaces.IFormattable;
-	import interfaces.IHandler;
-	import interfaces.IRemotable;
-	import interfaces.ISearch;
-	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ICollectionView;
 	import mx.controls.Alert;
+	import mx.core.mx_internal;
 	import mx.events.FlexEvent;
+	import mx.managers.PopUpManager;
 	import mx.rpc.AsyncResponder;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.events.FaultEvent;
@@ -30,6 +22,16 @@ package components.base
 	import spark.components.Group;
 	import spark.components.TextInput;
 	import spark.effects.Move;
+	
+	import components.bearSearchAdvDataGrids.advancedSearch.AdvancedSearchAdvDataGrid;
+	import components.bearSearchAdvDataGrids.utilities.RemoteObjectSearch;
+	import components.bearSearchAdvDataGrids.utilities.RemoteObjectWebSearch;
+	import components.bearSearchAdvDataGrids.webSearch.WebSearchAdvDataGrid;
+	
+	import interfaces.IFormattable;
+	import interfaces.IHandler;
+	import interfaces.IRemotable;
+	import interfaces.ISearch;
 	
 	public class BearSearchBaseClass extends Group
 	{
@@ -64,6 +66,7 @@ package components.base
 			bPreviousState.addEventListener(MouseEvent.CLICK, bpreviousState_clickHandler);
 			
 			adgWebSearch.addEventListener(ResultEvent.RESULT, webSearch_resultHandler);
+			adgAdvancedSearch.addEventListener(ResultEvent.RESULT, advancedSearch_resultHandler);
 		}
 		
 		private function controlQHandler(event:KeyboardEvent):void
@@ -81,6 +84,8 @@ package components.base
 		
 		private function bSearch_clickHandler(event:MouseEvent):void
 		{
+			adgAdvancedSearch.acAdvancedSearch = null;
+			adgAdvancedSearch.dataProvider = adgAdvancedSearch.acAdvancedSearch;
 			adgWebSearch.search(tiSearch.text);
 		}
 		
@@ -89,6 +94,13 @@ package components.base
 		private function webSearch_resultHandler(event:ResultEvent):void
 		{
 			adgAdvancedSearch.search(tiSearch.text);
+		}
+		
+		private function advancedSearch_resultHandler(event:ResultEvent):void
+		{
+			PopUpManager.removePopUp(adgWebSearch.searchingAlert);
+			PopUpManager.removePopUp(adgAdvancedSearch.searchingAlert);
+			adgWebSearch.dataProvider = adgWebSearch.acWebSearch;
 		}
 	}
 }
