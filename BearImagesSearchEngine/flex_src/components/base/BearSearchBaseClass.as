@@ -48,7 +48,7 @@ package components.base
 		// Bindable button object in order to sustain the effects
 		[Bindable]
 		public var bPreviousState:Button = new Button();
-				
+		
 		public function BearSearchBaseClass()
 		{
 			super();
@@ -86,7 +86,14 @@ package components.base
 		{
 			adgAdvancedSearch.acAdvancedSearch = null;
 			adgAdvancedSearch.dataProvider = adgAdvancedSearch.acAdvancedSearch;
-			adgWebSearch.search(tiSearch.text);
+			if(tiSearch.text.length > 0)
+			{
+				adgWebSearch.search(tiSearch.text);
+			}
+			else
+			{
+				Alert.show("Please enter a search string", "Empty Textbox Error", 4, this);
+			}
 		}
 		
 		private function bpreviousState_clickHandler(event:MouseEvent):void{};
